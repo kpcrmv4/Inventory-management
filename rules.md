@@ -10,14 +10,14 @@
 
 | Phase | ชื่อ | Tasks | สถานะ |
 |-------|------|-------|--------|
-| 1 | Project Setup & Infrastructure | 1.1-1.9 | ⬜ ยังไม่เริ่ม |
-| 2 | Database Schema & Migrations | 2.1-2.7 | ⬜ ยังไม่เริ่ม |
-| 3 | Auth & Multi-Tenant | 3.1-3.5 | ⬜ ยังไม่เริ่ม |
-| 4 | Inventory Module | 4.1-4.5 | ⬜ ยังไม่เริ่ม |
-| 5 | Daily Sale & Expenses | 5.1-5.3 | ⬜ ยังไม่เริ่ม |
-| 6 | Labor Management | 6.1-6.3 | ⬜ ยังไม่เริ่ม |
-| 7 | P&L, Dashboard & Complaints | 7.1-7.4 | ⬜ ยังไม่เริ่ม |
-| 8 | Settings, Polish & Deploy | 8.1-8.7 | ⬜ ยังไม่เริ่ม |
+| 1 | Project Setup & Infrastructure | 1.1-1.9 | ✅ เสร็จแล้ว |
+| 2 | Database Schema & Migrations | 2.1-2.7 | ✅ เสร็จแล้ว |
+| 3 | Auth & Multi-Tenant | 3.1-3.5 | ✅ เสร็จแล้ว |
+| 4 | Inventory Module | 4.1-4.5 | ✅ เสร็จแล้ว |
+| 5 | Daily Sale & Expenses | 5.1-5.3 | ✅ เสร็จแล้ว |
+| 6 | Labor Management | 6.1-6.3 | ✅ เสร็จแล้ว |
+| 7 | P&L, Dashboard & Complaints | 7.1-7.4 | ✅ เสร็จแล้ว |
+| 8 | Settings, Polish & Deploy | 8.1-8.7 | ✅ เสร็จแล้ว |
 
 ### Task-Level Tracking
 
