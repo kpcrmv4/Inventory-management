@@ -1,5 +1,6 @@
 import { Menu, LogOut } from 'lucide-react'
 import { ThemeToggle } from '../ui/ThemeToggle'
+import { BranchSwitcher } from './BranchSwitcher'
 import { useAuth } from '../../hooks/useAuth'
 
 interface NavbarProps {
@@ -21,10 +22,13 @@ export function Navbar({ onMenuClick }: NavbarProps) {
         </button>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 flex items-center gap-3">
         <span className="text-sm text-base-content/60">
           {profile?.full_name}
         </span>
+        {profile?.role !== 'superadmin' && (
+          <BranchSwitcher />
+        )}
       </div>
 
       <div className="flex-none flex items-center gap-1">

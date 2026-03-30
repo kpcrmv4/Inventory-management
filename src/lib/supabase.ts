@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js'
-import type { Database } from '../types/database'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -8,4 +7,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables')
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+// Note: We use untyped client here for flexibility.
+// Row types are defined in ../types/database.ts and used directly in app code.
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
