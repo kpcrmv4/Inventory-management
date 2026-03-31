@@ -1,5 +1,9 @@
 -- 008_auth_trigger.sql
--- Auto-create public.users record when auth.users is inserted
+-- Auto-create tenant + branch + user when auth.users is inserted during signup
+
+-- Drop old trigger/function if exists
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP FUNCTION IF EXISTS public.handle_new_user();
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger
@@ -9,31 +13,60 @@ SET search_path = public
 AS $$
 DECLARE
   v_full_name text;
+  v_store_name text;
+  v_plan plan_type;
   v_tenant_id uuid;
-  v_role user_role;
+  v_branch_id uuid;
 BEGIN
-  -- Extract full_name from user metadata
+  -- Extract metadata from signup
   v_full_name := COALESCE(
     NEW.raw_user_meta_data ->> 'full_name',
     NEW.raw_user_meta_data ->> 'name',
     ''
   );
+  v_store_name := NEW.raw_user_meta_data ->> 'store_name';
+  v_plan := COALESCE(
+    (NEW.raw_user_meta_data ->> 'plan')::plan_type,
+    'standard'
+  );
 
-  -- Extract tenant_id if provided during signup
-  v_tenant_id := (NEW.raw_user_meta_data ->> 'tenant_id')::uuid;
+  -- If store_name provided = new tenant signup
+  IF v_store_name IS NOT NULL AND v_store_name != '' THEN
+    -- Create tenant (pending approval)
+    INSERT INTO public.tenants (id, name, plan, status)
+    VALUES (gen_random_uuid(), v_store_name, v_plan, 'pending')
+    RETURNING id INTO v_tenant_id;
 
-  -- Default role is owner for new signups
-  v_role := 'owner';
+    -- Create default branch
+    INSERT INTO public.branches (id, tenant_id, name, is_active)
+    VALUES (gen_random_uuid(), v_tenant_id, v_store_name || ' - สาขาหลัก', true)
+    RETURNING id INTO v_branch_id;
 
-  INSERT INTO public.users (id, tenant_id, role, full_name, is_active)
-  VALUES (NEW.id, v_tenant_id, v_role, v_full_name, true)
-  ON CONFLICT (id) DO NOTHING;
+    -- Create user as owner (can see all branches)
+    INSERT INTO public.users (id, tenant_id, branch_id, role, full_name, is_active)
+    VALUES (NEW.id, v_tenant_id, NULL, 'owner', v_full_name, true)
+    ON CONFLICT (id) DO NOTHING;
+  ELSE
+    -- Staff invite or other signup — just create user record
+    v_tenant_id := (NEW.raw_user_meta_data ->> 'tenant_id')::uuid;
+    v_branch_id := (NEW.raw_user_meta_data ->> 'branch_id')::uuid;
+
+    INSERT INTO public.users (id, tenant_id, branch_id, role, full_name, is_active)
+    VALUES (
+      NEW.id,
+      v_tenant_id,
+      v_branch_id,
+      COALESCE((NEW.raw_user_meta_data ->> 'role')::user_role, 'staff'),
+      v_full_name,
+      true
+    )
+    ON CONFLICT (id) DO NOTHING;
+  END IF;
 
   RETURN NEW;
 END;
 $$;
 
--- Trigger on auth.users insert
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW
