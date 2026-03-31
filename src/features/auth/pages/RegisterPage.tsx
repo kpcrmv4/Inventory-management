@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserPlus, Eye, EyeOff } from 'lucide-react'
-import { useAuth } from '../../../hooks/useAuth'
 import { supabase } from '../../../lib/supabase'
 import { showError, showSuccess } from '../../../lib/toast'
 import type { PlanType } from '../../../types/database'
 
 export default function RegisterPage() {
-  const { signUp } = useAuth()
   const navigate = useNavigate()
 
   const [storeName, setStoreName] = useState('')
@@ -31,58 +29,32 @@ export default function RegisterPage() {
 
     setSubmitting(true)
     try {
-      // 1. Sign up in auth
-      await signUp(email, password, fullName)
-
-      // 2. Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) throw new Error('ไม่สามารถสร้างบัญชีได้')
-
-      // 3. Create tenant (pending)
-      const { data: tenant, error: tenantErr } = await supabase
-        .from('tenants')
-        .insert({
-          name: storeName,
-          plan,
-          status: 'pending',
-          approved_at: null,
-          approved_by: null,
-          expires_at: null,
-        })
-        .select('id')
-        .single()
-      if (tenantErr) throw tenantErr
-
-      // 4. Create default branch
-      const { data: branch, error: branchErr } = await supabase
-        .from('branches')
-        .insert({
-          tenant_id: tenant.id,
-          name: `${storeName} - สาขาหลัก`,
-          address: null,
-          is_active: true,
-        })
-        .select('id')
-        .single()
-      if (branchErr) throw branchErr
-
-      // 5. Create user profile as owner
-      const { error: userErr } = await supabase.from('users').insert({
-        id: user.id,
-        tenant_id: tenant.id,
-        branch_id: null, // owner sees all branches
-        role: 'owner',
-        full_name: fullName,
-        is_active: true,
+      // SignUp with metadata — auth trigger จะสร้าง tenant + branch + user ให้อัตโนมัติ
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            store_name: storeName,
+            plan,
+          },
+        },
       })
-      if (userErr) throw userErr
 
-      // Suppress unused warning — branch is created for side-effect
-      void branch
+      if (error) {
+        // แปลง error messages เป็นภาษาไทย
+        if (error.message.includes('already registered')) {
+          showError('อีเมลนี้ถูกใช้งานแล้ว')
+        } else if (error.status === 429) {
+          showError('คำขอมากเกินไป กรุณารอสักครู่แล้วลองใหม่')
+        } else {
+          showError(error.message)
+        }
+        return
+      }
 
-      showSuccess('สมัครสมาชิกสำเร็จ กรุณารอการอนุมัติ')
+      showSuccess('สมัครสมาชิกสำเร็จ! กรุณารอการอนุมัติจาก Admin')
       navigate('/pending')
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'เกิดข้อผิดพลาด'
