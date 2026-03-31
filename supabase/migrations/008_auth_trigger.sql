@@ -43,9 +43,13 @@ BEGIN
     RETURNING id INTO v_branch_id;
 
     -- Create user as owner (can see all branches)
+    -- ON CONFLICT DO UPDATE เผื่อ user record ถูกสร้างไว้แล้วโดย trigger เก่า
     INSERT INTO public.users (id, tenant_id, branch_id, role, full_name, is_active)
     VALUES (NEW.id, v_tenant_id, NULL, 'owner', v_full_name, true)
-    ON CONFLICT (id) DO NOTHING;
+    ON CONFLICT (id) DO UPDATE
+      SET tenant_id = EXCLUDED.tenant_id,
+          role = 'owner',
+          full_name = EXCLUDED.full_name;
   ELSE
     -- Staff invite or other signup — just create user record
     v_tenant_id := (NEW.raw_user_meta_data ->> 'tenant_id')::uuid;
@@ -60,7 +64,10 @@ BEGIN
       v_full_name,
       true
     )
-    ON CONFLICT (id) DO NOTHING;
+    ON CONFLICT (id) DO UPDATE
+      SET tenant_id = COALESCE(EXCLUDED.tenant_id, public.users.tenant_id),
+          branch_id = COALESCE(EXCLUDED.branch_id, public.users.branch_id),
+          full_name = EXCLUDED.full_name;
   END IF;
 
   RETURN NEW;
