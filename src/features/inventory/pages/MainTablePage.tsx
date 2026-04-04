@@ -8,6 +8,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { useAuth } from '../../../hooks/useAuth'
+import { useBranch } from '../../../hooks/useBranch'
 import { useInventory } from '../hooks/useInventory'
 import type { InventoryRow } from '../hooks/useInventory'
 import { supabase } from '../../../lib/supabase'
@@ -22,7 +23,8 @@ const CATEGORY_KEYS = Object.keys(INVENTORY_CATEGORIES) as InventoryCategory[]
 
 export default function MainTablePage() {
   const { profile } = useAuth()
-  const branchId = profile?.branch_id ?? null
+  const { activeBranch } = useBranch()
+  const branchId = activeBranch?.id ?? null
 
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(CURRENT_CE_YEAR)

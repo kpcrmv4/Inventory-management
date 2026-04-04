@@ -28,7 +28,7 @@ export function useExpenses(branchId: string | null, month: number, year: number
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
-  const effectiveBranchId = branchId || profile?.branch_id
+  const effectiveBranchId = branchId
 
   const fetchExpenses = useCallback(async () => {
     if (!effectiveBranchId) return

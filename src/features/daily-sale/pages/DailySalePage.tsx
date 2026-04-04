@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Calendar, Save, TrendingUp, Receipt, Percent } from 'lucide-react'
 import { useAuth } from '../../../hooks/useAuth'
+import { useBranch } from '../../../hooks/useBranch'
 import { useDailySale } from '../hooks/useDailySale'
 import { calculateDailySummary, calculateDTD } from '../utils/sale-calculations'
 import { formatBaht, formatNumber } from '../../../lib/currency'
@@ -13,8 +14,9 @@ function getTodayISO(): string {
 
 export default function DailySalePage() {
   const { profile } = useAuth()
+  const { activeBranch } = useBranch()
   const [selectedDate, setSelectedDate] = useState(getTodayISO())
-  const branchId = profile?.branch_id || null
+  const branchId = activeBranch?.id ?? null
 
   const {
     channels,

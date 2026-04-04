@@ -9,6 +9,7 @@ import {
   Calendar,
 } from 'lucide-react'
 import { useAuth } from '../../../hooks/useAuth'
+import { useBranch } from '../../../hooks/useBranch'
 import { supabase } from '../../../lib/supabase'
 import { showSuccess, showError, showWarning } from '../../../lib/toast'
 import { formatBaht, formatNumber } from '../../../lib/currency'
@@ -31,7 +32,8 @@ interface ReceivingEntry {
 
 export default function ReceivingPage() {
   const { profile } = useAuth()
-  const branchId = profile?.branch_id ?? null
+  const { activeBranch } = useBranch()
+  const branchId = activeBranch?.id ?? null
 
   const today = new Date().toISOString().slice(0, 10)
   const [date, setDate] = useState(today)

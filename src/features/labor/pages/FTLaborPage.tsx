@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Save, UserPlus, Users } from 'lucide-react'
 import { useAuth } from '../../../hooks/useAuth'
+import { useBranch } from '../../../hooks/useBranch'
 import { useEmployees } from '../hooks/useEmployees'
 import { useLabor } from '../hooks/useLabor'
 import { LaborForm } from '../components/LaborForm'
@@ -16,7 +17,8 @@ export default function FTLaborPage() {
   const [year, setYear] = useState(now.getFullYear())
   const [showModal, setShowModal] = useState(false)
 
-  const branchId = profile?.branch_id || null
+  const { activeBranch } = useBranch()
+  const branchId = activeBranch?.id ?? null
   const { employees, loading: loadingEmployees, createEmployee } = useEmployees(branchId, 'ft')
   const { getRecord, updateRecord, saveAll, saving, loading: loadingLabor } = useLabor(
     branchId,
