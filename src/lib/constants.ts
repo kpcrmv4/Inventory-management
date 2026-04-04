@@ -81,6 +81,13 @@ export const PL_CODES = {
   '0702': 'ภาษีนิติบุคคล',
 } as const
 
+export const RECIPE_CATEGORIES = {
+  food: 'อาหาร',
+  beverage: 'เครื่องดื่ม',
+  dessert: 'ขนมหวาน',
+  other: 'อื่นๆ',
+} as const
+
 export const SAFETY_STOCK_PCT = 0.02
 export const MAX_BRANCHES_STANDARD = 1
 export const MAX_BRANCHES_PRO = 5

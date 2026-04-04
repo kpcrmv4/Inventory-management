@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Receipt, Users, FileText,
-  Settings, MessageSquare, X, ChefHat,
+  Settings, MessageSquare, X, ChefHat, BookOpen,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import type { UserRole } from '../../types/database'
@@ -24,6 +24,7 @@ const appNavItems: NavItem[] = [
   { to: '/app/inventory/receiving', label: 'รับของเข้า', icon: <Package size={20} />, roles: ['owner', 'staff'] },
   { to: '/app/inventory/raw-waste', label: 'ของเสีย', icon: <Package size={20} />, roles: ['owner', 'staff'] },
   { to: '/app/inventory/par-stock', label: 'Par Stock', icon: <Package size={20} />, roles: ['owner', 'staff'] },
+  { to: '/app/recipes', label: 'สูตรอาหาร', icon: <BookOpen size={20} />, roles: ['owner', 'staff'] },
   { to: '/app/pl/daily-sale', label: 'ยอดขายรายวัน', icon: <Receipt size={20} />, roles: ['owner', 'staff'] },
   { to: '/app/pl/expenses', label: 'ค่าใช้จ่าย', icon: <Receipt size={20} />, roles: ['owner', 'staff'] },
   { to: '/app/pl/report', label: 'งบ P&L', icon: <FileText size={20} />, roles: ['owner'] },

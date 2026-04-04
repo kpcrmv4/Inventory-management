@@ -22,6 +22,8 @@ export type InventoryCategory =
   | '0205'
   | '0409'
 
+export type RecipeCategory = 'food' | 'beverage' | 'dessert' | 'other'
+
 /* ------------------------------------------------------------------ */
 /*  Row types — used directly in application code                     */
 /* ------------------------------------------------------------------ */
@@ -265,6 +267,37 @@ export interface Complaint {
   created_at: string
 }
 
+export interface Recipe {
+  id: string
+  tenant_id: string
+  name: string
+  category: RecipeCategory
+  image_url: string | null
+  is_active: boolean
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export interface RecipeVariant {
+  id: string
+  recipe_id: string
+  name: string
+  selling_price: number
+  is_default: boolean
+  is_active: boolean
+  sort_order: number
+  created_at: string
+}
+
+export interface RecipeIngredient {
+  id: string
+  variant_id: string
+  item_id: string
+  quantity: number
+  created_at: string
+}
+
 /* ------------------------------------------------------------------ */
 /*  Supabase Database type — maps table names to Row types            */
 /*  Using simple Row/Insert/Update so Supabase client infers properly */
@@ -300,6 +333,9 @@ export interface Database {
       employees: TableDef<Employee>
       monthly_labor: TableDef<MonthlyLabor>
       complaints: TableDef<Complaint>
+      recipes: TableDef<Recipe>
+      recipe_variants: TableDef<RecipeVariant>
+      recipe_ingredients: TableDef<RecipeIngredient>
     }
     Enums: {
       plan_type: PlanType
