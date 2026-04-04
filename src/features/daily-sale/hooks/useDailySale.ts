@@ -38,14 +38,23 @@ export function useDailySale(branchId: string | null, date: string) {
   const effectiveBranchId = branchId || profile?.branch_id
 
   const fetchChannels = useCallback(async () => {
-    if (!profile?.tenant_id) return
-    const { data } = await supabase
-      .from('sales_channels')
-      .select('*')
-      .eq('tenant_id', profile.tenant_id)
-      .eq('is_active', true)
-      .order('sort_order')
-    if (data) setChannels(data)
+    if (!profile?.tenant_id) {
+      setLoading(false)
+      return
+    }
+    try {
+      const { data, error } = await supabase
+        .from('sales_channels')
+        .select('*')
+        .eq('tenant_id', profile.tenant_id)
+        .eq('is_active', true)
+        .order('sort_order')
+      if (error) throw error
+      if (data) setChannels(data)
+    } catch (err) {
+      console.error('Failed to fetch sales channels:', err)
+      setLoading(false)
+    }
   }, [profile?.tenant_id])
 
   const fetchDailySale = useCallback(async () => {
@@ -143,8 +152,11 @@ export function useDailySale(branchId: string | null, date: string) {
   useEffect(() => {
     if (channels.length > 0) {
       fetchDailySale()
+    } else if (channels.length === 0 && profile?.tenant_id) {
+      // Channels loaded but empty — no sales channels configured
+      setLoading(false)
     }
-  }, [fetchDailySale, channels.length])
+  }, [fetchDailySale, channels.length, profile?.tenant_id])
 
   // Initialize entries when channels load and no saved data
   useEffect(() => {
