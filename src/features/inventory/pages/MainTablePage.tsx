@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
   Package,
   Plus,
@@ -39,10 +39,10 @@ export default function MainTablePage() {
   const [savingHeader, setSavingHeader] = useState(false)
 
   // Sync header values when data loads
-  useState(() => {
+  useEffect(() => {
     if (header.totalMonthlySales) setTotalSales(String(header.totalMonthlySales))
     if (header.sellingDays) setSellingDays(String(header.sellingDays))
-  })
+  }, [header.totalMonthlySales, header.sellingDays])
 
   // Add item modal
   const [showModal, setShowModal] = useState(false)

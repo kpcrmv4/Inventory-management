@@ -39,6 +39,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setLoading(false)
       }
+    }).catch((err) => {
+      console.error('Failed to get session:', err)
+      setLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -58,14 +61,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   async function fetchProfile(userId: string) {
-    const { data } = await supabase
-      .from('users')
-      .select('id, tenant_id, branch_id, role, full_name')
-      .eq('id', userId)
-      .single()
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, tenant_id, branch_id, role, full_name')
+        .eq('id', userId)
+        .single()
 
-    setProfile(data)
-    setLoading(false)
+      if (error) {
+        console.error('Failed to fetch user profile:', error)
+        setProfile(null)
+      } else {
+        setProfile(data)
+      }
+    } catch (err) {
+      console.error('Failed to fetch user profile:', err)
+      setProfile(null)
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function signIn(email: string, password: string) {
