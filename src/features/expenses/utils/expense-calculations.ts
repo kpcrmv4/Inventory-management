@@ -47,23 +47,28 @@ export function calculateCOGSExpenses(expenses: FixedExpense[]): number {
     .reduce((sum, e) => sum + (e.amount || 0), 0)
 }
 
+const CONTROLLABLE_CODES = [
+  '0401', '0402', '0403', '0404', '0405',
+  '0406', '0407', '0408', '0409', '0410',
+  '0411', '0412', '0413', '0414', '0415',
+]
+
+const NON_CONTROLLABLE_CODES = [
+  '0501', '0502', '0503', '0504', '0505',
+  '0506', '0507', '0508', '0509', '0510',
+]
+
 /** รวม Controllable Expenses (0401-0415) */
 export function calculateControllableTotal(expenses: FixedExpense[]): number {
   return expenses
-    .filter((e) => {
-      const num = parseInt(e.code, 10)
-      return num >= 401 && num <= 415
-    })
+    .filter((e) => CONTROLLABLE_CODES.includes(e.code))
     .reduce((sum, e) => sum + (e.amount || 0), 0)
 }
 
 /** รวม Non-controllable Expenses (0501-0510) */
 export function calculateNonControllableTotal(expenses: FixedExpense[]): number {
   return expenses
-    .filter((e) => {
-      const num = parseInt(e.code, 10)
-      return num >= 501 && num <= 510
-    })
+    .filter((e) => NON_CONTROLLABLE_CODES.includes(e.code))
     .reduce((sum, e) => sum + (e.amount || 0), 0)
 }
 

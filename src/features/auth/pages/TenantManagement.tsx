@@ -6,6 +6,7 @@ import {
   Clock,
   Search,
   RefreshCw,
+  Trash2,
 } from 'lucide-react'
 import { supabase } from '../../../lib/supabase'
 import { useAuth } from '../../../hooks/useAuth'
@@ -41,6 +42,9 @@ export default function TenantManagement() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [filterStatus, setFilterStatus] = useState<TenantStatus | ''>('')
+  const [resetTarget, setResetTarget] = useState<TenantRow | null>(null)
+  const [resetting, setResetting] = useState(false)
+  const [confirmText, setConfirmText] = useState('')
 
   useEffect(() => {
     fetchTenants()
@@ -124,6 +128,24 @@ export default function TenantManagement() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'เกิดข้อผิดพลาด'
       showError(msg)
+    }
+  }
+
+  async function resetTenantData(tenantId: string) {
+    setResetting(true)
+    try {
+      const { error } = await supabase.rpc('reset_tenant_data', {
+        p_tenant_id: tenantId,
+      })
+      if (error) throw error
+      showSuccess('รีเซ็ตข้อมูล Tenant สำเร็จ')
+      setResetTarget(null)
+      setConfirmText('')
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'เกิดข้อผิดพลาด'
+      showError(msg)
+    } finally {
+      setResetting(false)
     }
   }
 
@@ -219,7 +241,7 @@ export default function TenantManagement() {
                     {t.expires_at ? formatThaiDate(t.expires_at) : '-'}
                   </td>
                   <td>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 flex-wrap">
                       {t.status === 'pending' && (
                         <button
                           className="btn btn-success btn-xs gap-1"
@@ -247,6 +269,13 @@ export default function TenantManagement() {
                           เปิดใช้งาน
                         </button>
                       )}
+                      <button
+                        className="btn btn-ghost btn-xs gap-1 text-error"
+                        onClick={() => { setResetTarget(t); setConfirmText('') }}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        รีเซ็ต
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -254,6 +283,68 @@ export default function TenantManagement() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {/* Reset Confirmation Modal */}
+      {resetTarget && (
+        <dialog className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg text-error mb-2">
+              รีเซ็ตข้อมูล Tenant
+            </h3>
+            <div className="space-y-3">
+              <p>
+                คุณกำลังจะ<strong className="text-error">ลบข้อมูลทั้งหมด</strong>ของ
+                <strong> {resetTarget.name}</strong>
+              </p>
+              <div className="bg-base-200 rounded-lg p-3 text-sm space-y-1">
+                <p>ข้อมูลที่จะถูกลบ:</p>
+                <ul className="list-disc list-inside text-base-content/70">
+                  <li>Inventory (สินค้า, Opening/Closing, รับของเข้า, Waste)</li>
+                  <li>ยอดขายรายวัน, เป้าขาย, ส่วนลด</li>
+                  <li>ค่าใช้จ่ายทั้งหมด</li>
+                  <li>พนักงานและเงินเดือน</li>
+                  <li>สูตรอาหารทั้งหมด</li>
+                  <li>ข้อร้องเรียน</li>
+                </ul>
+                <p className="text-success mt-2">คงไว้: ข้อมูล Tenant, สาขา, ผู้ใช้</p>
+              </div>
+              <div>
+                <label className="label label-text">
+                  พิมพ์ <strong className="text-error">RESET</strong> เพื่อยืนยัน
+                </label>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  placeholder="RESET"
+                  value={confirmText}
+                  onChange={(e) => setConfirmText(e.target.value)}
+                  autoFocus
+                />
+              </div>
+            </div>
+            <div className="modal-action">
+              <button
+                className="btn btn-ghost"
+                onClick={() => { setResetTarget(null); setConfirmText('') }}
+                disabled={resetting}
+              >
+                ยกเลิก
+              </button>
+              <button
+                className="btn btn-error"
+                disabled={confirmText !== 'RESET' || resetting}
+                onClick={() => resetTenantData(resetTarget.id)}
+              >
+                {resetting && <span className="loading loading-spinner loading-xs" />}
+                ยืนยันรีเซ็ต
+              </button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={() => { setResetTarget(null); setConfirmText('') }}>close</button>
+          </form>
+        </dialog>
       )}
     </div>
   )

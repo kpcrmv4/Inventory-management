@@ -27,6 +27,9 @@ const PLReport = lazy(() => import('../../features/pl/pages/PLReportPage'))
 const FTLabor = lazy(() => import('../../features/labor/pages/FTLaborPage'))
 const PTLabor = lazy(() => import('../../features/labor/pages/PTLaborPage'))
 const HQLabor = lazy(() => import('../../features/labor/pages/HQLaborPage'))
+const Recipes = lazy(() => import('../../features/recipes/pages/RecipesPage'))
+const RecipeDetail = lazy(() => import('../../features/recipes/pages/RecipeDetailPage'))
+const RecipeDashboard = lazy(() => import('../../features/recipes/pages/RecipeDashboardPage'))
 const Complaints = lazy(() => import('../../features/complaints/pages/ComplaintsPage'))
 const BranchSettings = lazy(() => import('../../features/settings/pages/BranchSettingsPage'))
 const UserSettings = lazy(() => import('../../features/settings/pages/UserSettingsPage'))
@@ -86,6 +89,10 @@ export const router = createBrowserRouter([
       { path: 'pl/labor/ft', element: <RoleRoute allowed={['owner']}><LazyPage><FTLabor /></LazyPage></RoleRoute> },
       { path: 'pl/labor/pt', element: <RoleRoute allowed={['owner']}><LazyPage><PTLabor /></LazyPage></RoleRoute> },
       { path: 'pl/labor/hq', element: <RoleRoute allowed={['owner']}><LazyPage><HQLabor /></LazyPage></RoleRoute> },
+      // Recipes
+      { path: 'recipes', element: <LazyPage><Recipes /></LazyPage> },
+      { path: 'recipes/dashboard', element: <RoleRoute allowed={['owner']}><LazyPage><RecipeDashboard /></LazyPage></RoleRoute> },
+      { path: 'recipes/:id', element: <LazyPage><RecipeDetail /></LazyPage> },
       // Other
       { path: 'complaints', element: <LazyPage><Complaints /></LazyPage> },
       { path: 'settings/branches', element: <RoleRoute allowed={['owner']}><LazyPage><BranchSettings /></LazyPage></RoleRoute> },

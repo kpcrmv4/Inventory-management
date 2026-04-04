@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "db:seed": "psql \"$DATABASE_URL\" -f supabase/seed.sql && psql \"$DATABASE_URL\" -f supabase/seed_part2.sql",
+    "db:reset": "psql \"$DATABASE_URL\" -c \"SELECT reset_tenant_data('d0000000-0000-0000-0000-000000000001');\"",
+    "db:reseed": "npm run db:reset && npm run db:seed"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.100.1",
