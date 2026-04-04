@@ -7,6 +7,7 @@ import {
   Ban,
   Users,
   ArrowRight,
+  RefreshCw,
 } from 'lucide-react'
 import { supabase } from '../../../lib/supabase'
 import { showError } from '../../../lib/toast'
@@ -59,73 +60,137 @@ export default function SuperAdminDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <span className="loading loading-spinner loading-lg" />
+        <span className="loading loading-spinner loading-lg text-primary" />
       </div>
     )
   }
 
+  const statCards = [
+    {
+      label: 'Tenant ทั้งหมด',
+      value: stats.total,
+      icon: Building2,
+      color: 'text-primary',
+      bg: 'bg-primary/10',
+    },
+    {
+      label: 'รอการอนุมัติ',
+      value: stats.pending,
+      icon: Clock,
+      color: 'text-warning',
+      bg: 'bg-warning/10',
+    },
+    {
+      label: 'ใช้งานอยู่',
+      value: stats.active,
+      icon: CheckCircle,
+      color: 'text-success',
+      bg: 'bg-success/10',
+    },
+    {
+      label: 'ถูกระงับ',
+      value: stats.suspended,
+      icon: Ban,
+      color: 'text-error',
+      bg: 'bg-error/10',
+    },
+  ]
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">SuperAdmin Dashboard</h1>
-
-      {/* Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="stat bg-base-100 shadow rounded-box">
-          <div className="stat-figure text-primary">
-            <Building2 className="w-8 h-8" />
-          </div>
-          <div className="stat-title">Tenant ทั้งหมด</div>
-          <div className="stat-value text-primary">{stats.total}</div>
-        </div>
-
-        <div className="stat bg-base-100 shadow rounded-box">
-          <div className="stat-figure text-warning">
-            <Clock className="w-8 h-8" />
-          </div>
-          <div className="stat-title">รอการอนุมัติ</div>
-          <div className="stat-value text-warning">{stats.pending}</div>
-        </div>
-
-        <div className="stat bg-base-100 shadow rounded-box">
-          <div className="stat-figure text-success">
-            <CheckCircle className="w-8 h-8" />
-          </div>
-          <div className="stat-title">ใช้งานอยู่</div>
-          <div className="stat-value text-success">{stats.active}</div>
-        </div>
-
-        <div className="stat bg-base-100 shadow rounded-box">
-          <div className="stat-figure text-error">
-            <Ban className="w-8 h-8" />
-          </div>
-          <div className="stat-title">ถูกระงับ</div>
-          <div className="stat-value text-error">{stats.suspended}</div>
-        </div>
+    <div className="max-w-5xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl sm:text-2xl font-bold text-base-content">
+          SuperAdmin Dashboard
+        </h1>
+        <button
+          className="btn btn-ghost btn-sm btn-circle"
+          onClick={fetchStats}
+          aria-label="รีเฟรช"
+        >
+          <RefreshCw size={18} />
+        </button>
       </div>
 
-      {/* Quick actions */}
-      <div className="card bg-base-100 shadow">
-        <div className="card-body">
-          <h2 className="card-title">
-            <Users className="w-5 h-5" />
-            การจัดการ
-          </h2>
-
-          {stats.pending > 0 && (
-            <div className="alert alert-warning mb-4">
-              <Clock className="w-5 h-5" />
-              <span>
-                มี {stats.pending} Tenant รอการอนุมัติ
+      {/* Stats cards - 2 columns on mobile, 4 on desktop */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {statCards.map((card) => (
+          <div
+            key={card.label}
+            className="rounded-2xl border border-base-300 bg-base-100 p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs sm:text-sm text-base-content/60 font-medium">
+                {card.label}
               </span>
+              <div className={`${card.bg} ${card.color} rounded-xl p-2`}>
+                <card.icon size={20} />
+              </div>
             </div>
-          )}
+            <p className={`text-2xl sm:text-3xl font-bold ${card.color}`}>
+              {card.value}
+            </p>
+          </div>
+        ))}
+      </div>
 
+      {/* Pending alert */}
+      {stats.pending > 0 && (
+        <div className="flex items-center gap-3 rounded-2xl border border-warning/30 bg-warning/10 p-4">
+          <Clock className="text-warning shrink-0" size={22} />
+          <p className="text-sm sm:text-base text-base-content flex-1">
+            มี <span className="font-semibold">{stats.pending}</span> Tenant รอการอนุมัติ
+          </p>
           <Link
             to="/superadmin/tenants"
-            className="btn btn-primary btn-outline gap-2"
+            className="btn btn-warning btn-sm gap-1"
           >
-            จัดการ Tenant
-            <ArrowRight className="w-4 h-4" />
+            ดู
+            <ArrowRight size={14} />
+          </Link>
+        </div>
+      )}
+
+      {/* Quick actions */}
+      <div className="rounded-2xl border border-base-300 bg-base-100 p-4 sm:p-6 shadow-sm">
+        <div className="flex items-center gap-2 mb-4">
+          <Users className="text-base-content/70" size={20} />
+          <h2 className="text-base sm:text-lg font-semibold text-base-content">
+            การจัดการ
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Link
+            to="/superadmin/tenants"
+            className="flex items-center justify-between rounded-xl border border-base-300 bg-base-200/50 p-4 hover:bg-base-200 transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="bg-primary/10 text-primary rounded-lg p-2">
+                <Building2 size={20} />
+              </div>
+              <div>
+                <p className="font-medium text-sm sm:text-base">จัดการ Tenant</p>
+                <p className="text-xs text-base-content/50">อนุมัติ / ระงับ / ดูรายละเอียด</p>
+              </div>
+            </div>
+            <ArrowRight size={18} className="text-base-content/30 group-hover:text-primary transition-colors" />
+          </Link>
+
+          <Link
+            to="/superadmin/settings"
+            className="flex items-center justify-between rounded-xl border border-base-300 bg-base-200/50 p-4 hover:bg-base-200 transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="bg-secondary/10 text-secondary rounded-lg p-2">
+                <Users size={20} />
+              </div>
+              <div>
+                <p className="font-medium text-sm sm:text-base">ตั้งค่าระบบ</p>
+                <p className="text-xs text-base-content/50">ตั้งค่า SuperAdmin</p>
+              </div>
+            </div>
+            <ArrowRight size={18} className="text-base-content/30 group-hover:text-secondary transition-colors" />
           </Link>
         </div>
       </div>
