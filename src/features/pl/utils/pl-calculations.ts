@@ -10,8 +10,12 @@ import { safeDivide } from '../../../lib/currency'
 export interface RevenueResult {
   /** Gross revenue before discounts (sum of 0101-0110) */
   grossRevenue: number
+  /** Per-channel sales breakdown (channel_code → amount) */
+  salesByChannel: Record<string, number>
   /** Total discounts (0111+0112+0113, these are negative amounts) */
   totalDiscount: number
+  /** Per-type discount breakdown (0111/0112/0113 → amount as negative) */
+  discountsByType: Record<string, number>
   /** VAT (0114, entered as negative) */
   vat: number
   /** Cash over/short (0115) */
@@ -112,7 +116,21 @@ export function calculateRevenue(
   const cashOverShort = extras.cashOverShort ?? 0
   const netRevenue = grossRevenue + totalDiscount + vat + cashOverShort
 
-  return { grossRevenue, totalDiscount, vat, cashOverShort, netRevenue }
+  const discountsByType: Record<string, number> = {
+    '0111': -(Math.abs(discounts['0111'] ?? 0)),
+    '0112': -(Math.abs(discounts['0112'] ?? 0)),
+    '0113': -(Math.abs(discounts['0113'] ?? 0)),
+  }
+
+  return {
+    grossRevenue,
+    salesByChannel: dailySales,
+    totalDiscount,
+    discountsByType,
+    vat,
+    cashOverShort,
+    netRevenue,
+  }
 }
 
 // ─── COGS ────────────────────────────────────────────────────

@@ -98,7 +98,43 @@ export function usePLReport({ branchId, month, year }: UsePLReportOptions): UseP
 
       const pl = plData as PLSummaryRPC
 
-      // 2. Fetch individual monthly expenses for line-item display in controllable/non-controllable sections
+      // 2. Fetch per-channel sales for revenue line-item display
+      const startDate = `${year}-${String(month).padStart(2, '0')}-01`
+      const endDate = month === 12
+        ? `${year + 1}-01-01`
+        : `${year}-${String(month + 1).padStart(2, '0')}-01`
+
+      const { data: channelSalesData } = await supabase
+        .from('daily_sales')
+        .select('channel_id, amount, sales_channels!inner(code)')
+        .eq('branch_id', branchId)
+        .gte('date', startDate)
+        .lt('date', endDate)
+
+      const salesByChannel: Record<string, number> = {}
+      if (channelSalesData) {
+        for (const row of channelSalesData as any[]) {
+          const code = row.sales_channels?.code ?? row.channel_id
+          salesByChannel[code] = (salesByChannel[code] ?? 0) + (row.amount ?? 0)
+        }
+      }
+
+      // 3. Fetch per-type discounts for display
+      const { data: discountData } = await supabase
+        .from('daily_sale_discounts')
+        .select('discount_type, amount')
+        .eq('branch_id', branchId)
+        .gte('date', startDate)
+        .lt('date', endDate)
+
+      const discountsByType: Record<string, number> = {}
+      if (discountData) {
+        for (const row of discountData) {
+          discountsByType[row.discount_type] = (discountsByType[row.discount_type] ?? 0) + (row.amount ?? 0)
+        }
+      }
+
+      // 4. Fetch individual monthly expenses for line-item display in controllable/non-controllable sections
       const { data: expensesData } = await supabase
         .from('monthly_expenses')
         .select('code, amount')
@@ -142,7 +178,13 @@ export function usePLReport({ branchId, month, year }: UsePLReportOptions): UseP
       const fullReport: FullPLReport = {
         revenue: {
           grossRevenue: pl.revenue.total_sales,
+          salesByChannel,
           totalDiscount: -(pl.revenue.total_discounts),
+          discountsByType: {
+            '0111': -(discountsByType['0111'] ?? 0),
+            '0112': -(discountsByType['0112'] ?? 0),
+            '0113': -(discountsByType['0113'] ?? 0),
+          },
           vat: -(Math.abs(pl.revenue.vat)),
           cashOverShort: pl.revenue.cash_over_short,
           netRevenue: pl.revenue.net_revenue,

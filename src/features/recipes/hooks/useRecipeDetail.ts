@@ -40,6 +40,7 @@ export function useRecipeDetail(recipeId: string | null) {
   const { profile } = useAuth()
   const [recipe, setRecipe] = useState<RecipeDetail | null>(null)
   const [inventoryItems, setInventoryItems] = useState<InventoryOption[]>([])
+  const [avgCosts, setAvgCosts] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
@@ -126,10 +127,52 @@ export function useRecipeDetail(recipeId: string | null) {
     }
   }, [profile?.tenant_id])
 
+  // Fetch avg costs from the most recent month's inventory data
+  const fetchAvgCosts = useCallback(async () => {
+    if (!profile?.tenant_id) return
+
+    // Use the server-side inventory function if a branch exists,
+    // otherwise fall back to latest receiving prices
+    const now = new Date()
+    const month = now.getMonth() + 1
+    const year = now.getFullYear()
+
+    // Get all branches for the tenant
+    const { data: branches } = await supabase
+      .from('branches')
+      .select('id')
+      .eq('tenant_id', profile.tenant_id)
+      .eq('is_active', true)
+      .limit(1)
+
+    if (!branches || branches.length === 0) return
+
+    const branchId = branches[0].id
+
+    // Try server-side function for comprehensive avg costs
+    const { data: usageData } = await supabase.rpc('calculate_inventory_usage', {
+      p_branch_id: branchId,
+      p_month: month,
+      p_year: year,
+    })
+
+    const costs: Record<string, number> = {}
+    if (usageData) {
+      for (const row of usageData as any[]) {
+        if (row.avg_cost > 0) {
+          costs[row.item_id] = row.avg_cost
+        }
+      }
+    }
+
+    setAvgCosts(costs)
+  }, [profile?.tenant_id])
+
   useEffect(() => {
     fetchDetail()
     fetchInventoryItems()
-  }, [fetchDetail, fetchInventoryItems])
+    fetchAvgCosts()
+  }, [fetchDetail, fetchInventoryItems, fetchAvgCosts])
 
   // Update recipe metadata
   const updateRecipe = useCallback(async (updates: { name?: string; category?: RecipeCategory }) => {
@@ -301,6 +344,7 @@ export function useRecipeDetail(recipeId: string | null) {
   return {
     recipe,
     inventoryItems,
+    avgCosts,
     loading,
     saving,
     updateRecipe,

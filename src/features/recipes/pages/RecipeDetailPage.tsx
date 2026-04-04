@@ -17,7 +17,7 @@ export default function RecipeDetailPage() {
   const isOwner = profile?.role === 'owner'
 
   const {
-    recipe, inventoryItems, loading, saving,
+    recipe, inventoryItems, avgCosts, loading, saving,
     updateRecipe, addVariant, updateVariant, deleteVariant,
     addIngredient, updateIngredient, removeIngredient, copyIngredients,
   } = useRecipeDetail(id ?? null)
@@ -91,9 +91,6 @@ export default function RecipeDetailPage() {
     setCopyTo(null)
     setCopyFrom('')
   }
-
-  // Mock avg costs (in real app, fetched from inventory)
-  const avgCosts: Record<string, number> = {}
 
   return (
     <div className="space-y-6 max-w-4xl">

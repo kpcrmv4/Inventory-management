@@ -104,8 +104,10 @@ export default function PLReportPage() {
     )
   }
 
-  // Revenue codes
-  const revenueCodes: PLCode[] = ['0101', '0102', '0110']
+  // Revenue: show all channels that have data + known codes
+  const revenueChannelCodes = report
+    ? Object.keys(report.revenue.salesByChannel).sort()
+    : []
   const discountCodes: PLCode[] = ['0111', '0112', '0113']
 
   // COGS codes (auto from inventory)
@@ -223,16 +225,12 @@ export default function PLReportPage() {
             <tbody>
               {/* ═══ Revenue ═══ */}
               <SectionHeader title="รายได้การขาย (Revenue)" />
-              {revenueCodes.map(code => (
+              {revenueChannelCodes.map(code => (
                 <PLRow
                   key={code}
                   code={code}
-                  label={PL_CODES[code]}
-                  amount={report.revenue.grossRevenue > 0
-                    ? (code === '0101' ? report.revenue.grossRevenue * 0.6 :
-                       code === '0102' ? report.revenue.grossRevenue * 0.25 :
-                       report.revenue.grossRevenue * 0.15)
-                    : 0}
+                  label={PL_CODES[code as PLCode] ?? `ช่องทาง ${code}`}
+                  amount={report.revenue.salesByChannel[code] ?? 0}
                 />
               ))}
               {discountCodes.map(code => (
@@ -240,11 +238,7 @@ export default function PLReportPage() {
                   key={code}
                   code={code}
                   label={PL_CODES[code]}
-                  amount={
-                    code === '0111' ? (report.revenue.totalDiscount * 0.4) :
-                    code === '0112' ? (report.revenue.totalDiscount * 0.4) :
-                    (report.revenue.totalDiscount * 0.2)
-                  }
+                  amount={report.revenue.discountsByType[code] ?? 0}
                   isNegative
                 />
               ))}
