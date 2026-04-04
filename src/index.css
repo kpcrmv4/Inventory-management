@@ -13,4 +13,8 @@
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
