@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Receipt, BookOpen, MoreHorizontal,
-  Building2, ChefHat, Settings,
+  ChefHat, Settings,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 
