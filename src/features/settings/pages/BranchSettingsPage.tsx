@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Building2, Plus, ToggleLeft, ToggleRight, ArrowUpCircle,
 } from 'lucide-react'
@@ -21,7 +21,7 @@ export default function BranchSettingsPage() {
   const [planLoading, setPlanLoading] = useState(true)
 
   // Fetch tenant plan
-  useState(() => {
+  useEffect(() => {
     async function fetchPlan() {
       if (!profile?.tenant_id) {
         setPlanLoading(false)
@@ -41,7 +41,7 @@ export default function BranchSettingsPage() {
       }
     }
     fetchPlan()
-  })
+  }, [profile?.tenant_id])
 
   const maxBranches = tenantPlan === 'pro' ? MAX_BRANCHES_PRO : MAX_BRANCHES_STANDARD
   const canAddBranch = branches.length < maxBranches
