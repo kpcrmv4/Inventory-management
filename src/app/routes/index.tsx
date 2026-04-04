@@ -13,6 +13,7 @@ const PendingPage = lazy(() => import('../../features/auth/pages/PendingPage'))
 // SuperAdmin
 const SADashboard = lazy(() => import('../../features/auth/pages/SuperAdminDashboard'))
 const TenantManagement = lazy(() => import('../../features/auth/pages/TenantManagement'))
+const SASettings = lazy(() => import('../../features/auth/pages/SuperAdminSettingsPage'))
 
 // App pages
 const Dashboard = lazy(() => import('../../features/report/pages/DashboardPage'))
@@ -65,7 +66,7 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <LazyPage><SADashboard /></LazyPage> },
       { path: 'tenants', element: <LazyPage><TenantManagement /></LazyPage> },
-      { path: 'settings', element: <LazyPage><div className="text-base-content">ตั้งค่าระบบ</div></LazyPage> },
+      { path: 'settings', element: <LazyPage><SASettings /></LazyPage> },
     ],
   },
 
