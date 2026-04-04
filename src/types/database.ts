@@ -284,6 +284,9 @@ export interface RecipeVariant {
   recipe_id: string
   name: string
   selling_price: number
+  packaging_cost: number
+  gp_platform_pct: number
+  other_variable_cost: number
   is_default: boolean
   is_active: boolean
   sort_order: number

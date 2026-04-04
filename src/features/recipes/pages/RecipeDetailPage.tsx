@@ -9,6 +9,7 @@ import { RECIPE_CATEGORIES, INVENTORY_CATEGORIES } from '../../../lib/constants'
 import { formatBaht, formatNumber } from '../../../lib/currency'
 import { calculateVariantCost } from '../utils/recipe-calculations'
 import type { RecipeCategory } from '../../../types/database'
+import type { VariantDetail } from '../hooks/useRecipeDetail'
 
 export default function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -92,6 +93,20 @@ export default function RecipeDetailPage() {
     setCopyFrom('')
   }
 
+  const handleUpdateCostField = (
+    variant: VariantDetail,
+    field: 'packaging_cost' | 'gp_platform_pct' | 'other_variable_cost',
+    rawValue: string,
+  ) => {
+    let val = parseFloat(rawValue) || 0
+    // gp_platform_pct: user enters percentage (e.g. 16), store as decimal (0.16)
+    const storeVal = field === 'gp_platform_pct' ? val / 100 : val
+    const currentVal = variant[field]
+    if (storeVal !== currentVal) {
+      updateVariant(variant.id, { [field]: storeVal } as any)
+    }
+  }
+
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Back + Header */}
@@ -172,7 +187,11 @@ export default function RecipeDetailPage() {
             })),
             avgCosts,
             variant.selling_price,
+            variant.packaging_cost,
+            variant.gp_platform_pct,
+            variant.other_variable_cost,
           )
+          const hasExtraCosts = variant.packaging_cost > 0 || variant.gp_platform_pct > 0 || variant.other_variable_cost > 0
 
           return (
             <div key={variant.id} className="card bg-base-200 shadow-sm">
@@ -181,7 +200,7 @@ export default function RecipeDetailPage() {
                 className="card-body p-4 cursor-pointer"
                 onClick={() => setExpandedVariant(isExpanded ? null : variant.id)}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-3">
                     {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     <div>
@@ -191,7 +210,7 @@ export default function RecipeDetailPage() {
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-4 text-sm flex-wrap">
                     <div className="text-right">
                       <div className="text-base-content/60">ราคาขาย</div>
                       <div className="font-mono font-semibold">{formatBaht(variant.selling_price)}</div>
@@ -200,11 +219,11 @@ export default function RecipeDetailPage() {
                       <div className="text-base-content/60">วัตถุดิบ</div>
                       <div className="font-mono">{variant.ingredients.length} รายการ</div>
                     </div>
-                    {costResult.totalCost > 0 && (
+                    {costResult.ingredientCost > 0 && (
                       <>
                         <div className="text-right">
-                          <div className="text-base-content/60">ต้นทุน</div>
-                          <div className="font-mono">{formatBaht(costResult.totalCost)}</div>
+                          <div className="text-base-content/60">ต้นทุนวัตถุดิบ</div>
+                          <div className="font-mono">{formatBaht(costResult.ingredientCost)}</div>
                         </div>
                         <div className="text-right">
                           <div className="text-base-content/60">Food Cost</div>
@@ -212,42 +231,146 @@ export default function RecipeDetailPage() {
                             {formatNumber(costResult.foodCostPct, 1)}%
                           </div>
                         </div>
+                        {hasExtraCosts && (
+                          <>
+                            <div className="text-right">
+                              <div className="text-base-content/60">ต้นทุนรวม</div>
+                              <div className="font-mono">{formatBaht(costResult.totalVariableCost)}</div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-base-content/60">Margin</div>
+                              <div className={`font-mono ${costResult.contributionMargin < 0 ? 'text-error' : 'text-success'}`}>
+                                {formatBaht(costResult.contributionMargin)}
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </>
                     )}
                   </div>
                 </div>
               </div>
 
-              {/* Expanded: Ingredients */}
+              {/* Expanded: Details */}
               {isExpanded && (
-                <div className="px-4 pb-4 space-y-3">
-                  {/* Variant price editor */}
+                <div className="px-4 pb-4 space-y-4">
+                  {/* Variant price + cost fields editor */}
                   {isOwner && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <span className="text-base-content/60">ราคาขาย:</span>
-                      <input
-                        type="number"
-                        className="input input-bordered input-xs w-28 font-mono"
-                        defaultValue={variant.selling_price}
-                        onBlur={(e) => {
-                          const val = parseFloat(e.target.value) || 0
-                          if (val !== variant.selling_price) {
-                            updateVariant(variant.id, { selling_price: val })
-                          }
-                        }}
-                      />
-                      <span className="text-base-content/60">บาท</span>
-
-                      {!variant.is_default && (
-                        <button
-                          className="btn btn-ghost btn-xs text-error ml-auto"
-                          onClick={() => {
-                            if (confirm(`ลบตัวเลือก "${variant.name}" ?`)) deleteVariant(variant.id)
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                      <div>
+                        <label className="text-base-content/60 text-xs">ราคาขาย (บาท)</label>
+                        <input
+                          type="number"
+                          className="input input-bordered input-xs w-full font-mono"
+                          defaultValue={variant.selling_price}
+                          onBlur={(e) => {
+                            const val = parseFloat(e.target.value) || 0
+                            if (val !== variant.selling_price) {
+                              updateVariant(variant.id, { selling_price: val })
+                            }
                           }}
-                        >
-                          <Trash2 size={14} /> ลบตัวเลือก
-                        </button>
-                      )}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-base-content/60 text-xs">บรรจุภัณฑ์ (บาท/ชิ้น)</label>
+                        <input
+                          type="number"
+                          className="input input-bordered input-xs w-full font-mono"
+                          defaultValue={variant.packaging_cost}
+                          step="0.01"
+                          onBlur={(e) => handleUpdateCostField(variant, 'packaging_cost', e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-base-content/60 text-xs">GP Platform (%)</label>
+                        <input
+                          type="number"
+                          className="input input-bordered input-xs w-full font-mono"
+                          defaultValue={formatNumber(variant.gp_platform_pct * 100, 2)}
+                          step="0.01"
+                          placeholder="เช่น 16"
+                          onBlur={(e) => handleUpdateCostField(variant, 'gp_platform_pct', e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-base-content/60 text-xs">ต้นทุนอื่น (บาท/ชิ้น)</label>
+                        <input
+                          type="number"
+                          className="input input-bordered input-xs w-full font-mono"
+                          defaultValue={variant.other_variable_cost}
+                          step="0.01"
+                          onBlur={(e) => handleUpdateCostField(variant, 'other_variable_cost', e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Cost breakdown summary */}
+                  {costResult.ingredientCost > 0 && (
+                    <div className="bg-base-300 rounded-lg p-3 text-sm">
+                      <div className="font-semibold mb-2">สรุปต้นทุน</div>
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+                        <div className="flex justify-between">
+                          <span className="text-base-content/70">ต้นทุนวัตถุดิบ</span>
+                          <span className="font-mono">{formatBaht(costResult.ingredientCost)}</span>
+                        </div>
+                        {costResult.packagingCost > 0 && (
+                          <div className="flex justify-between">
+                            <span className="text-base-content/70">บรรจุภัณฑ์</span>
+                            <span className="font-mono">{formatBaht(costResult.packagingCost)}</span>
+                          </div>
+                        )}
+                        {costResult.gpPlatformAmount > 0 && (
+                          <div className="flex justify-between">
+                            <span className="text-base-content/70">GP Platform</span>
+                            <span className="font-mono">{formatBaht(costResult.gpPlatformAmount)}</span>
+                          </div>
+                        )}
+                        {costResult.otherVariableCost > 0 && (
+                          <div className="flex justify-between">
+                            <span className="text-base-content/70">ต้นทุนอื่น</span>
+                            <span className="font-mono">{formatBaht(costResult.otherVariableCost)}</span>
+                          </div>
+                        )}
+                        <div className="col-span-2 border-t border-base-content/10 mt-1 pt-1 flex justify-between font-semibold">
+                          <span>ต้นทุนผันแปรรวม</span>
+                          <span className="font-mono">{formatBaht(costResult.totalVariableCost)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-base-content/70">Contribution Margin</span>
+                          <span className={`font-mono ${costResult.contributionMargin < 0 ? 'text-error' : 'text-success'}`}>
+                            {formatBaht(costResult.contributionMargin)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-base-content/70">Food Cost %</span>
+                          <span className={`font-mono ${costResult.foodCostPct > 35 ? 'text-error' : 'text-success'}`}>
+                            {formatNumber(costResult.foodCostPct, 1)}%
+                          </span>
+                        </div>
+                        {hasExtraCosts && (
+                          <div className="flex justify-between">
+                            <span className="text-base-content/70">Total Cost %</span>
+                            <span className={`font-mono ${costResult.totalCostPct > 65 ? 'text-error' : costResult.totalCostPct > 50 ? 'text-warning' : 'text-success'}`}>
+                              {formatNumber(costResult.totalCostPct, 1)}%
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Delete variant (only non-default) */}
+                  {isOwner && !variant.is_default && (
+                    <div className="flex justify-end">
+                      <button
+                        className="btn btn-ghost btn-xs text-error"
+                        onClick={() => {
+                          if (confirm(`ลบตัวเลือก "${variant.name}" ?`)) deleteVariant(variant.id)
+                        }}
+                      >
+                        <Trash2 size={14} /> ลบตัวเลือก
+                      </button>
                     </div>
                   )}
 
@@ -259,13 +382,15 @@ export default function RecipeDetailPage() {
                           <th>วัตถุดิบ</th>
                           <th className="text-right w-28">ปริมาณ</th>
                           <th className="w-20">หน่วย</th>
+                          <th className="text-right w-24">ต้นทุน/หน่วย</th>
+                          <th className="text-right w-24">ต้นทุนรวม</th>
                           {isOwner && <th className="w-16"></th>}
                         </tr>
                       </thead>
                       <tbody>
-                        {variant.ingredients.map((ing) => (
-                          <tr key={ing.id}>
-                            <td>{ing.item_name}</td>
+                        {costResult.ingredients.map((ing, idx) => (
+                          <tr key={variant.ingredients[idx].id}>
+                            <td>{ing.itemName}</td>
                             <td className="text-right">
                               {isOwner ? (
                                 <input
@@ -275,7 +400,7 @@ export default function RecipeDetailPage() {
                                   step="0.01"
                                   onBlur={(e) => {
                                     const val = parseFloat(e.target.value) || 0
-                                    if (val !== ing.quantity) updateIngredient(ing.id, val)
+                                    if (val !== ing.quantity) updateIngredient(variant.ingredients[idx].id, val)
                                   }}
                                 />
                               ) : (
@@ -283,11 +408,17 @@ export default function RecipeDetailPage() {
                               )}
                             </td>
                             <td className="text-base-content/60">{ing.unit}</td>
+                            <td className="text-right font-mono text-base-content/60">
+                              {ing.avgCost > 0 ? formatBaht(ing.avgCost) : '-'}
+                            </td>
+                            <td className="text-right font-mono">
+                              {ing.totalCost > 0 ? formatBaht(ing.totalCost) : '-'}
+                            </td>
                             {isOwner && (
                               <td>
                                 <button
                                   className="btn btn-ghost btn-xs text-error"
-                                  onClick={() => removeIngredient(ing.id)}
+                                  onClick={() => removeIngredient(variant.ingredients[idx].id)}
                                 >
                                   <Trash2 size={12} />
                                 </button>
@@ -296,6 +427,13 @@ export default function RecipeDetailPage() {
                           </tr>
                         ))}
                       </tbody>
+                      <tfoot>
+                        <tr className="font-semibold">
+                          <td colSpan={4} className="text-right">รวมวัตถุดิบ</td>
+                          <td className="text-right font-mono">{formatBaht(costResult.ingredientCost)}</td>
+                          {isOwner && <td></td>}
+                        </tr>
+                      </tfoot>
                     </table>
                   )}
 

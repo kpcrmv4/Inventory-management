@@ -8,6 +8,9 @@ export interface VariantDetail {
   id: string
   name: string
   selling_price: number
+  packaging_cost: number
+  gp_platform_pct: number
+  other_variable_cost: number
   is_default: boolean
   sort_order: number
   ingredients: IngredientDetail[]
@@ -57,7 +60,8 @@ export function useRecipeDetail(recipeId: string | null) {
         .select(`
           id, name, category, is_active,
           recipe_variants (
-            id, name, selling_price, is_default, sort_order,
+            id, name, selling_price, packaging_cost, gp_platform_pct, other_variable_cost,
+            is_default, sort_order,
             recipe_ingredients (
               id, item_id, quantity,
               inventory_items ( name, unit )
@@ -80,6 +84,9 @@ export function useRecipeDetail(recipeId: string | null) {
             id: v.id,
             name: v.name,
             selling_price: v.selling_price,
+            packaging_cost: v.packaging_cost ?? 0,
+            gp_platform_pct: v.gp_platform_pct ?? 0,
+            other_variable_cost: v.other_variable_cost ?? 0,
             is_default: v.is_default,
             sort_order: v.sort_order,
             ingredients: (v.recipe_ingredients ?? []).map((ri: any) => ({
@@ -221,7 +228,10 @@ export function useRecipeDetail(recipeId: string | null) {
   }, [recipeId, recipe, fetchDetail])
 
   // Update variant
-  const updateVariant = useCallback(async (variantId: string, updates: { name?: string; selling_price?: number }) => {
+  const updateVariant = useCallback(async (variantId: string, updates: {
+    name?: string; selling_price?: number;
+    packaging_cost?: number; gp_platform_pct?: number; other_variable_cost?: number;
+  }) => {
     setSaving(true)
     try {
       const { error } = await supabase
