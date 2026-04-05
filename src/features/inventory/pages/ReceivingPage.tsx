@@ -218,8 +218,8 @@ export default function ReceivingPage() {
             <Plus size={18} className="text-primary" />
             เพิ่มรายการรับเข้า
           </h3>
-          <div className="flex flex-col sm:flex-row gap-3 items-end">
-            <div className="form-control flex-1">
+          <div className="space-y-3">
+            <div className="form-control">
               <label className="label py-0">
                 <span className="label-text text-xs font-medium">รายการ</span>
               </label>
@@ -236,46 +236,50 @@ export default function ReceivingPage() {
                 ))}
               </select>
             </div>
-            <div className="form-control w-full sm:w-32">
-              <label className="label py-0">
-                <span className="label-text text-xs font-medium">จำนวน</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm"
-                placeholder="0"
-                value={qty}
-                onChange={(e) => setQty(e.target.value)}
-                min={0}
-                step="any"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="form-control">
+                <label className="label py-0">
+                  <span className="label-text text-xs font-medium">จำนวน</span>
+                </label>
+                <input
+                  type="number"
+                  className="input input-bordered input-sm w-full"
+                  placeholder="0"
+                  value={qty}
+                  onChange={(e) => setQty(e.target.value)}
+                  min={0}
+                  step="any"
+                />
+              </div>
+              <div className="form-control">
+                <label className="label py-0">
+                  <span className="label-text text-xs font-medium">จำนวนเงิน (บาท)</span>
+                </label>
+                <input
+                  type="number"
+                  className="input input-bordered input-sm w-full"
+                  placeholder="0"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  min={0}
+                  step="any"
+                />
+              </div>
             </div>
-            <div className="form-control w-full sm:w-40">
-              <label className="label py-0">
-                <span className="label-text text-xs font-medium">จำนวนเงิน (บาท)</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm"
-                placeholder="0"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                min={0}
-                step="any"
-              />
+            <div className="flex justify-end">
+              <button
+                className="btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
+                onClick={handleAdd}
+                disabled={submitting}
+              >
+                {submitting ? (
+                  <span className="loading loading-spinner loading-xs" />
+                ) : (
+                  <Plus className="w-4 h-4" />
+                )}
+                เพิ่ม
+              </button>
             </div>
-            <button
-              className="btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
-              onClick={handleAdd}
-              disabled={submitting}
-            >
-              {submitting ? (
-                <span className="loading loading-spinner loading-xs" />
-              ) : (
-                <Plus className="w-4 h-4" />
-              )}
-              เพิ่ม
-            </button>
           </div>
         </div>
       </div>

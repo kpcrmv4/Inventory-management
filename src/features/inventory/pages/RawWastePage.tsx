@@ -214,11 +214,14 @@ export default function RawWastePage() {
       {/* Add form */}
       <div className="card bg-base-100 card-enhanced bg-gradient-brand-subtle mb-5">
         <div className="card-body p-5">
-          <h3 className="font-semibold mb-3 flex items-center gap-2"><Plus size={18} className="text-primary" />เพิ่มรายการของเสีย</h3>
-          <div className="flex flex-col sm:flex-row gap-3 items-end">
-            <div className="form-control flex-1">
+          <h3 className="font-semibold mb-4 flex items-center gap-2">
+            <Plus size={18} className="text-primary" />
+            เพิ่มรายการของเสีย
+          </h3>
+          <div className="space-y-3">
+            <div className="form-control">
               <label className="label py-0">
-                <span className="label-text text-xs">รายการ</span>
+                <span className="label-text text-xs font-medium">รายการ</span>
               </label>
               <select
                 className="select select-bordered select-sm w-full"
@@ -233,45 +236,49 @@ export default function RawWastePage() {
                 ))}
               </select>
             </div>
-            <div className="form-control w-full sm:w-32">
-              <label className="label py-0">
-                <span className="label-text text-xs">จำนวน</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm"
-                placeholder="0"
-                value={qty}
-                onChange={(e) => setQty(e.target.value)}
-                min={0}
-                step="any"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="form-control">
+                <label className="label py-0">
+                  <span className="label-text text-xs font-medium">จำนวน</span>
+                </label>
+                <input
+                  type="number"
+                  className="input input-bordered input-sm w-full"
+                  placeholder="0"
+                  value={qty}
+                  onChange={(e) => setQty(e.target.value)}
+                  min={0}
+                  step="any"
+                />
+              </div>
+              <div className="form-control">
+                <label className="label py-0">
+                  <span className="label-text text-xs font-medium">ประเภท</span>
+                </label>
+                <select
+                  className="select select-bordered select-sm w-full"
+                  value={wasteType}
+                  onChange={(e) => setWasteType(e.target.value as WasteType)}
+                >
+                  <option value="trimmed">ตัดแต่งแล้ว</option>
+                  <option value="untrimmed">ยังไม่ตัดแต่ง</option>
+                </select>
+              </div>
             </div>
-            <div className="form-control w-full sm:w-48">
-              <label className="label py-0">
-                <span className="label-text text-xs">ประเภท</span>
-              </label>
-              <select
-                className="select select-bordered select-sm"
-                value={wasteType}
-                onChange={(e) => setWasteType(e.target.value as WasteType)}
+            <div className="flex justify-end">
+              <button
+                className="btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
+                onClick={handleAdd}
+                disabled={submitting}
               >
-                <option value="trimmed">ตัดแต่งแล้ว</option>
-                <option value="untrimmed">ยังไม่ตัดแต่ง</option>
-              </select>
+                {submitting ? (
+                  <span className="loading loading-spinner loading-xs" />
+                ) : (
+                  <Plus className="w-4 h-4" />
+                )}
+                เพิ่ม
+              </button>
             </div>
-            <button
-              className="btn btn-primary btn-sm gap-1"
-              onClick={handleAdd}
-              disabled={submitting}
-            >
-              {submitting ? (
-                <span className="loading loading-spinner loading-xs" />
-              ) : (
-                <Plus className="w-4 h-4" />
-              )}
-              เพิ่ม
-            </button>
           </div>
         </div>
       </div>
@@ -279,11 +286,15 @@ export default function RawWastePage() {
       {/* Entries table */}
       {loading ? (
         <div className="flex items-center justify-center h-32">
-          <span className="loading loading-spinner loading-lg" />
+          <span className="loading loading-spinner loading-lg text-primary" />
         </div>
       ) : entries.length === 0 ? (
-        <div className="text-center py-12 text-base-content/50">
-          ยังไม่มีรายการของเสียสำหรับวันที่เลือก
+        <div className="text-center py-16">
+          <div className="empty-state-icon animate-subtle-pulse">
+            <Trash size={32} className="text-base-content/30" />
+          </div>
+          <p className="text-base-content/40 font-medium">ยังไม่มีรายการของเสีย</p>
+          <p className="text-base-content/30 text-sm mt-1">สำหรับวันที่เลือก</p>
         </div>
       ) : (
         <>

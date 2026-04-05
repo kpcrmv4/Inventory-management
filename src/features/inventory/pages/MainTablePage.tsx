@@ -142,9 +142,9 @@ export default function MainTablePage() {
   const yearOptions = Array.from({ length: 5 }, (_, i) => CURRENT_CE_YEAR - 2 + i)
 
   return (
-    <div>
+    <div className="space-y-5">
       {/* Page header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
             <Package size={22} />
@@ -159,79 +159,88 @@ export default function MainTablePage() {
           onClick={() => setShowModal(true)}
         >
           <Plus className="w-4 h-4" />
-          เพิ่มรายการ
+          <span className="hidden sm:inline">เพิ่มรายการ</span>
         </button>
       </div>
 
       {/* Month/year selector */}
-      <div className="flex flex-wrap gap-3 mb-4">
-        <select
-          className="select select-bordered select-sm"
-          value={month}
-          onChange={(e) => setMonth(Number(e.target.value))}
-        >
-          {THAI_MONTHS.map((m, i) => (
-            <option key={i} value={i + 1}>
-              {m}
-            </option>
-          ))}
-        </select>
-        <select
-          className="select select-bordered select-sm"
-          value={year}
-          onChange={(e) => setYear(Number(e.target.value))}
-        >
-          {yearOptions.map((y) => (
-            <option key={y} value={y}>
-              {toBuddhistYear(y)}
-            </option>
-          ))}
-        </select>
+      <div className="card bg-base-100 card-enhanced">
+        <div className="card-body p-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <select
+              className="select select-bordered select-sm flex-1 min-w-[120px] max-w-[160px]"
+              value={month}
+              onChange={(e) => setMonth(Number(e.target.value))}
+            >
+              {THAI_MONTHS.map((m, i) => (
+                <option key={i} value={i + 1}>
+                  {m}
+                </option>
+              ))}
+            </select>
+            <select
+              className="select select-bordered select-sm w-24"
+              value={year}
+              onChange={(e) => setYear(Number(e.target.value))}
+            >
+              {yearOptions.map((y) => (
+                <option key={y} value={y}>
+                  {toBuddhistYear(y)}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
       </div>
 
       {/* Monthly header */}
-      <div className="card bg-base-100 shadow mb-6">
-        <div className="card-body p-4">
-          <h3 className="font-semibold mb-2">ข้อมูลรายเดือน</h3>
-          <div className="flex flex-wrap gap-4 items-end">
+      <div className="card bg-base-100 card-enhanced bg-gradient-brand-subtle">
+        <div className="card-body p-5">
+          <h3 className="font-semibold mb-4 flex items-center gap-2">
+            <Save size={16} className="text-primary" />
+            ข้อมูลรายเดือน
+          </h3>
+          <div className="space-y-4">
             <div className="form-control">
               <label className="label py-0">
-                <span className="label-text text-xs">ยอดขายรวมเดือน (บาท)</span>
+                <span className="label-text text-xs font-medium">ยอดขายรวมเดือน (บาท)</span>
               </label>
               <input
                 type="number"
-                className="input input-bordered input-sm w-48"
+                className="input input-bordered input-sm w-full"
                 value={totalSales}
                 onChange={(e) => setTotalSales(e.target.value)}
                 placeholder="0"
               />
             </div>
-            <div className="form-control">
-              <label className="label py-0">
-                <span className="label-text text-xs">จำนวนวันขาย</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm w-32"
-                value={sellingDays}
-                onChange={(e) => setSellingDays(e.target.value)}
-                min={0}
-                max={31}
-                placeholder="0"
-              />
+            <div className="flex items-end gap-3">
+              <div className="form-control flex-1">
+                <label className="label py-0">
+                  <span className="label-text text-xs font-medium">จำนวนวันขาย</span>
+                </label>
+                <input
+                  type="number"
+                  className="input input-bordered input-sm w-full"
+                  value={sellingDays}
+                  onChange={(e) => setSellingDays(e.target.value)}
+                  min={0}
+                  max={31}
+                  placeholder="0"
+                />
+              </div>
+              <button
+                className="btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
+                onClick={saveHeader}
+                disabled={savingHeader}
+              >
+                {savingHeader ? (
+                  <span className="loading loading-spinner loading-xs" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}
+                บันทึก
+              </button>
             </div>
-            <button
-              className="btn btn-primary btn-sm gap-1"
-              onClick={saveHeader}
-              disabled={savingHeader}
-            >
-              {savingHeader ? (
-                <span className="loading loading-spinner loading-xs" />
-              ) : (
-                <Save className="w-4 h-4" />
-              )}
-              บันทึก
-            </button>
           </div>
         </div>
       </div>
@@ -239,11 +248,15 @@ export default function MainTablePage() {
       {/* Inventory table */}
       {loading ? (
         <div className="flex items-center justify-center h-32">
-          <span className="loading loading-spinner loading-lg" />
+          <span className="loading loading-spinner loading-lg text-primary" />
         </div>
       ) : items.length === 0 ? (
-        <div className="text-center py-12 text-base-content/50">
-          ยังไม่มีรายการ กดปุ่ม "เพิ่มรายการ" เพื่อเริ่มต้น
+        <div className="text-center py-16">
+          <div className="empty-state-icon animate-subtle-pulse">
+            <Package size={32} className="text-base-content/30" />
+          </div>
+          <p className="text-base-content/40 font-medium">ยังไม่มีรายการ</p>
+          <p className="text-base-content/30 text-sm mt-1">กดปุ่ม "เพิ่มรายการ" เพื่อเริ่มต้น</p>
         </div>
       ) : (
         <div className="space-y-4">
