@@ -43,9 +43,11 @@ export default function LoginPage() {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-6">
-        <LogIn className="w-6 h-6 text-primary" />
-        <h1 className="text-2xl font-bold">เข้าสู่ระบบ</h1>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="icon-box-sm bg-primary/10 text-primary rounded-lg">
+          <LogIn size={18} />
+        </div>
+        <h1 className="text-xl font-bold">เข้าสู่ระบบ</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">

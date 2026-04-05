@@ -77,9 +77,14 @@ export default function DailySalePage() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">บันทึกยอดขายรายวัน</h1>
-          <p className="text-base-content/60 mt-1">{thaiDateDisplay}</p>
+        <div className="flex items-center gap-4">
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <Receipt size={22} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">บันทึกยอดขายรายวัน</h1>
+            <p className="text-base-content/50 text-sm mt-0.5">{thaiDateDisplay}</p>
+          </div>
         </div>
         <div className="flex gap-2">
           <input
@@ -89,7 +94,7 @@ export default function DailySalePage() {
             onChange={(e) => setSelectedDate(e.target.value)}
           />
           <button
-            className="btn btn-primary btn-sm"
+            className="btn btn-primary btn-sm shadow-md shadow-primary/20"
             onClick={save}
             disabled={saving}
           >
@@ -105,7 +110,7 @@ export default function DailySalePage() {
 
       {/* ยอดขายหน้าร้าน */}
       {dineInChannels.length > 0 && (
-        <div className="card bg-base-100 shadow-sm">
+        <div className="card bg-base-100 card-enhanced">
           <div className="card-body">
             <h2 className="card-title text-lg">
               <Receipt className="w-5 h-5" />
@@ -166,7 +171,7 @@ export default function DailySalePage() {
 
       {/* ยอดขาย Delivery */}
       {deliveryChannels.length > 0 && (
-        <div className="card bg-base-100 shadow-sm">
+        <div className="card bg-base-100 card-enhanced">
           <div className="card-body">
             <h2 className="card-title text-lg">
               <TrendingUp className="w-5 h-5" />
@@ -228,7 +233,7 @@ export default function DailySalePage() {
       )}
 
       {/* ส่วนลด */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 card-enhanced">
         <div className="card-body">
           <h2 className="card-title text-lg">
             <Percent className="w-5 h-5" />
@@ -300,7 +305,7 @@ export default function DailySalePage() {
       </div>
 
       {/* สรุปยอดขายรายวัน */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 card-enhanced">
         <div className="card-body">
           <h2 className="card-title text-lg">สรุปยอดขายรายวัน</h2>
           <div className="stats stats-vertical sm:stats-horizontal shadow w-full">
@@ -347,7 +352,7 @@ export default function DailySalePage() {
       </div>
 
       {/* DTD Tracker */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 card-enhanced">
         <div className="card-body">
           <h2 className="card-title text-lg">
             <Calendar className="w-5 h-5" />

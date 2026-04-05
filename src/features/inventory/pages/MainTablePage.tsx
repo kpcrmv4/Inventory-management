@@ -145,12 +145,17 @@ export default function MainTablePage() {
     <div>
       {/* Page header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Package className="w-6 h-6" />
-          ข้อมูลหลัก Inventory
-        </h1>
+        <div className="flex items-center gap-4">
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <Package size={22} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">ข้อมูลหลัก Inventory</h1>
+            <p className="text-sm text-base-content/50">จัดการข้อมูลวัตถุดิบทั้งหมด</p>
+          </div>
+        </div>
         <button
-          className="btn btn-primary btn-sm gap-1"
+          className="btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
           onClick={() => setShowModal(true)}
         >
           <Plus className="w-4 h-4" />
@@ -248,7 +253,7 @@ export default function MainTablePage() {
             const expanded = expandedCats.has(cat)
 
             return (
-              <div key={cat} className="card bg-base-100 shadow">
+              <div key={cat} className="card bg-base-100 card-enhanced">
                 <button
                   className="flex items-center gap-2 p-4 w-full text-left font-semibold hover:bg-base-200 transition"
                   onClick={() => toggleCategory(cat)}

@@ -7,6 +7,7 @@ import {
   Save,
   X,
   Calendar,
+  Package,
 } from 'lucide-react'
 import { useAuth } from '../../../hooks/useAuth'
 import { useBranch } from '../../../hooks/useBranch'
@@ -180,34 +181,47 @@ export default function ReceivingPage() {
   const totalAmount = entries.reduce((s, e) => s + e.amount, 0)
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold flex items-center gap-2 mb-6">
-        <PackagePlus className="w-6 h-6" />
-        รับของเข้ารายวัน
-      </h1>
+    <div className="space-y-5">
+      {/* Page header */}
+      <div className="flex items-center gap-4">
+        <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+          <PackagePlus size={22} />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">รับของเข้ารายวัน</h1>
+          <p className="text-sm text-base-content/50">บันทึกรายการรับวัตถุดิบเข้าคลัง</p>
+        </div>
+      </div>
 
       {/* Date picker */}
-      <div className="flex items-center gap-2 mb-4">
-        <Calendar className="w-4 h-4 text-base-content/60" />
-        <input
-          type="date"
-          className="input input-bordered input-sm"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-        <span className="text-sm text-base-content/60">
-          {formatThaiDate(date)}
-        </span>
+      <div className="card bg-base-100 card-enhanced">
+        <div className="card-body p-4 flex flex-row items-center gap-3">
+          <div className="icon-box-sm bg-primary/10 text-primary rounded-lg">
+            <Calendar size={16} />
+          </div>
+          <input
+            type="date"
+            className="input input-bordered input-sm flex-1 max-w-xs"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+          <span className="text-sm text-base-content/50 font-medium">
+            {formatThaiDate(date)}
+          </span>
+        </div>
       </div>
 
       {/* Add form */}
-      <div className="card bg-base-100 shadow mb-6">
-        <div className="card-body p-4">
-          <h3 className="font-semibold mb-3">เพิ่มรายการรับเข้า</h3>
+      <div className="card bg-base-100 card-enhanced bg-gradient-brand-subtle">
+        <div className="card-body p-5">
+          <h3 className="font-semibold text-base flex items-center gap-2 mb-4">
+            <Plus size={18} className="text-primary" />
+            เพิ่มรายการรับเข้า
+          </h3>
           <div className="flex flex-col sm:flex-row gap-3 items-end">
             <div className="form-control flex-1">
               <label className="label py-0">
-                <span className="label-text text-xs">รายการ</span>
+                <span className="label-text text-xs font-medium">รายการ</span>
               </label>
               <select
                 className="select select-bordered select-sm w-full"
@@ -224,7 +238,7 @@ export default function ReceivingPage() {
             </div>
             <div className="form-control w-full sm:w-32">
               <label className="label py-0">
-                <span className="label-text text-xs">จำนวน</span>
+                <span className="label-text text-xs font-medium">จำนวน</span>
               </label>
               <input
                 type="number"
@@ -238,7 +252,7 @@ export default function ReceivingPage() {
             </div>
             <div className="form-control w-full sm:w-40">
               <label className="label py-0">
-                <span className="label-text text-xs">จำนวนเงิน (บาท)</span>
+                <span className="label-text text-xs font-medium">จำนวนเงิน (บาท)</span>
               </label>
               <input
                 type="number"
@@ -251,7 +265,7 @@ export default function ReceivingPage() {
               />
             </div>
             <button
-              className="btn btn-primary btn-sm gap-1"
+              className="btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
               onClick={handleAdd}
               disabled={submitting}
             >
@@ -269,18 +283,22 @@ export default function ReceivingPage() {
       {/* Entries list */}
       {loading ? (
         <div className="flex items-center justify-center h-32">
-          <span className="loading loading-spinner loading-lg" />
+          <span className="loading loading-spinner loading-lg text-primary" />
         </div>
       ) : entries.length === 0 ? (
-        <div className="text-center py-12 text-base-content/50">
-          ยังไม่มีรายการรับเข้าสำหรับวันที่เลือก
+        <div className="text-center py-16">
+          <div className="empty-state-icon animate-subtle-pulse">
+            <Package size={32} className="text-base-content/30" />
+          </div>
+          <p className="text-base-content/40 font-medium">ยังไม่มีรายการรับเข้า</p>
+          <p className="text-base-content/30 text-sm mt-1">สำหรับวันที่เลือก</p>
         </div>
       ) : (
-        <div className="card bg-base-100 shadow">
+        <div className="card bg-base-100 card-enhanced">
           <div className="overflow-x-auto">
             <table className="table w-full">
               <thead>
-                <tr>
+                <tr className="bg-base-200/50">
                   <th>รายการ</th>
                   <th>หน่วย</th>
                   <th className="text-right">จำนวน</th>
@@ -290,9 +308,9 @@ export default function ReceivingPage() {
               </thead>
               <tbody>
                 {entries.map((entry) => (
-                  <tr key={entry.id}>
+                  <tr key={entry.id} className="hover:bg-base-200/30 transition-colors">
                     <td className="font-medium">{entry.itemName}</td>
-                    <td>{entry.itemUnit}</td>
+                    <td className="text-base-content/60">{entry.itemUnit}</td>
                     <td className="text-right">
                       {editId === entry.id ? (
                         <input
@@ -316,14 +334,14 @@ export default function ReceivingPage() {
                           step="any"
                         />
                       ) : (
-                        formatBaht(entry.amount)
+                        <span className="font-mono">{formatBaht(entry.amount)}</span>
                       )}
                     </td>
                     <td className="text-center">
                       {editId === entry.id ? (
                         <div className="flex justify-center gap-1">
                           <button
-                            className="btn btn-success btn-xs"
+                            className="btn btn-success btn-xs shadow-sm"
                             onClick={saveEdit}
                           >
                             <Save className="w-3 h-3" />
@@ -338,13 +356,13 @@ export default function ReceivingPage() {
                       ) : (
                         <div className="flex justify-center gap-1">
                           <button
-                            className="btn btn-ghost btn-xs"
+                            className="btn btn-ghost btn-xs hover:bg-primary/10 hover:text-primary"
                             onClick={() => startEdit(entry)}
                           >
                             <Pencil className="w-3 h-3" />
                           </button>
                           <button
-                            className="btn btn-ghost btn-xs text-error"
+                            className="btn btn-ghost btn-xs hover:bg-error/10 text-error"
                             onClick={() => handleDelete(entry.id)}
                           >
                             <Trash2 className="w-3 h-3" />
@@ -356,11 +374,11 @@ export default function ReceivingPage() {
                 ))}
               </tbody>
               <tfoot>
-                <tr className="font-bold">
+                <tr className="font-bold bg-base-200/30">
                   <td colSpan={3} className="text-right">
-                    รวม
+                    รวมทั้งหมด
                   </td>
-                  <td className="text-right">{formatBaht(totalAmount)}</td>
+                  <td className="text-right font-mono text-primary">{formatBaht(totalAmount)}</td>
                   <td />
                 </tr>
               </tfoot>

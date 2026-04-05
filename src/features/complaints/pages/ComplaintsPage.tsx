@@ -91,18 +91,20 @@ export default function ComplaintsPage() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <MessageSquare className="text-primary" size={28} />
+        <div className="flex items-center gap-4">
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <MessageSquare size={22} />
+          </div>
           <div>
             <h1 className="text-2xl font-bold">ข้อร้องเรียนลูกค้า</h1>
-            <p className="text-sm text-base-content/60">
+            <p className="text-sm text-base-content/50">
               ทั้งหมด {complaints.length} รายการ | ยังไม่แก้ไข {unresolvedCount} รายการ
             </p>
           </div>
         </div>
 
         <button
-          className="btn btn-primary btn-sm gap-1"
+          className="btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
           onClick={() => setShowForm(prev => !prev)}
         >
           <Plus size={16} />
@@ -112,7 +114,7 @@ export default function ComplaintsPage() {
 
       {/* Add Form */}
       {showForm && (
-        <div className="card bg-base-100 shadow-sm border border-base-300">
+        <div className="card bg-base-100 card-enhanced">
           <div className="card-body">
             <h3 className="card-title text-base">บันทึกข้อร้องเรียนใหม่</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -253,7 +255,7 @@ export default function ComplaintsPage() {
           {filteredComplaints.map(complaint => (
             <div
               key={complaint.id}
-              className={`card bg-base-100 shadow-sm border ${
+              className={`card bg-base-100 card-enhanced ${
                 complaint.resolved_at ? 'border-success/30' : 'border-warning/30'
               }`}
             >

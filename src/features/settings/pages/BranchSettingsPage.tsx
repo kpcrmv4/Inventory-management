@@ -111,11 +111,13 @@ export default function BranchSettingsPage() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Building2 className="text-primary" size={28} />
+        <div className="flex items-center gap-4">
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <Building2 size={22} />
+          </div>
           <div>
             <h1 className="text-2xl font-bold">จัดการสาขา</h1>
-            <p className="text-sm text-base-content/60">
+            <p className="text-sm text-base-content/50">
               {branches.length} / {maxBranches} สาขา | แผน {tenantPlan === 'pro' ? 'Pro' : 'Standard'}
             </p>
           </div>
@@ -146,7 +148,7 @@ export default function BranchSettingsPage() {
 
       {/* Add Branch Form */}
       {showForm && canAddBranch && (
-        <div className="card bg-base-100 shadow-sm border border-base-300">
+        <div className="card bg-base-100 card-enhanced">
           <div className="card-body">
             <h3 className="card-title text-base">เพิ่มสาขาใหม่</h3>
             <form onSubmit={handleAddBranch} className="space-y-4">
@@ -211,8 +213,8 @@ export default function BranchSettingsPage() {
           {branches.map(branch => (
             <div
               key={branch.id}
-              className={`card bg-base-100 shadow-sm border ${
-                branch.is_active ? 'border-base-300' : 'border-base-300 opacity-60'
+              className={`card bg-base-100 card-enhanced ${
+                branch.is_active ? '' : 'opacity-60'
               }`}
             >
               <div className="card-body p-4 flex-row items-center justify-between gap-4">

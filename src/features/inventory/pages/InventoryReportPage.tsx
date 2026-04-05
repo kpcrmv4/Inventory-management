@@ -88,10 +88,15 @@ export default function InventoryReportPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold flex items-center gap-2 mb-6">
-        <BarChart3 className="w-6 h-6" />
-        รายงาน Inventory
-      </h1>
+      <div className="flex items-center gap-4 mb-6">
+        <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+          <BarChart3 size={22} />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">รายงาน Inventory</h1>
+          <p className="text-sm text-base-content/50">สรุปการใช้วัตถุดิบ</p>
+        </div>
+      </div>
 
       {/* Month/year selector */}
       <div className="flex flex-wrap gap-3 mb-4">
@@ -167,7 +172,7 @@ export default function InventoryReportPage() {
           </div>
 
           {/* Ranking table */}
-          <div className="card bg-base-100 shadow">
+          <div className="card bg-base-100 card-enhanced">
             <div className="overflow-x-auto">
               <table className="table table-sm table-zebra w-full">
                 <thead>

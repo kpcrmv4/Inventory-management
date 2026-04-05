@@ -1,9 +1,18 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
+@theme {
+  --color-gradient-start: oklch(0.55 0.24 265);
+  --color-gradient-mid: oklch(0.6 0.22 290);
+  --color-gradient-end: oklch(0.65 0.19 330);
+}
 
 @layer base {
   html {
     font-family: 'Noto Sans Thai', 'Noto Sans', system-ui, sans-serif;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -17,4 +26,227 @@
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
+}
+
+/* ==========================================
+   Gradient Utilities
+   ========================================== */
+
+.bg-gradient-brand {
+  background: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-mid), var(--color-gradient-end));
+}
+
+.bg-gradient-brand-subtle {
+  background: linear-gradient(135deg, oklch(0.55 0.24 265 / 0.06), oklch(0.65 0.19 330 / 0.03));
+}
+
+[data-theme="dark"] .bg-gradient-brand-subtle {
+  background: linear-gradient(135deg, oklch(0.55 0.24 265 / 0.12), oklch(0.65 0.19 330 / 0.06));
+}
+
+.bg-gradient-card-blue {
+  background: linear-gradient(135deg, oklch(0.6 0.16 250 / 0.08), oklch(0.7 0.12 220 / 0.03));
+}
+
+.bg-gradient-card-green {
+  background: linear-gradient(135deg, oklch(0.65 0.18 155 / 0.08), oklch(0.7 0.14 140 / 0.03));
+}
+
+.bg-gradient-card-orange {
+  background: linear-gradient(135deg, oklch(0.7 0.16 60 / 0.08), oklch(0.75 0.12 45 / 0.03));
+}
+
+.bg-gradient-card-purple {
+  background: linear-gradient(135deg, oklch(0.55 0.2 290 / 0.08), oklch(0.65 0.16 310 / 0.03));
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ==========================================
+   Glass Effect
+   ========================================== */
+
+.glass-effect {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* ==========================================
+   Enhanced Card
+   ========================================== */
+
+.card-enhanced {
+  border: 1px solid oklch(0.8 0.02 265 / 0.3);
+  box-shadow:
+    0 1px 3px oklch(0.3 0 0 / 0.05),
+    0 4px 12px oklch(0.3 0 0 / 0.03);
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card-enhanced:hover {
+  box-shadow:
+    0 4px 12px oklch(0.3 0 0 / 0.08),
+    0 8px 24px oklch(0.3 0 0 / 0.05);
+  border-color: oklch(0.55 0.24 265 / 0.25);
+}
+
+[data-theme="dark"] .card-enhanced {
+  border-color: oklch(0.4 0.02 265 / 0.3);
+  box-shadow: 0 2px 8px oklch(0 0 0 / 0.2);
+}
+
+[data-theme="dark"] .card-enhanced:hover {
+  border-color: oklch(0.55 0.24 265 / 0.35);
+  box-shadow: 0 4px 16px oklch(0 0 0 / 0.3);
+}
+
+/* ==========================================
+   Animations
+   ========================================== */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes subtlePulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+.animate-subtle-pulse {
+  animation: subtlePulse 2.5s ease-in-out infinite;
+}
+
+/* ==========================================
+   Sidebar Active State
+   ========================================== */
+
+.sidebar-item-active {
+  background: linear-gradient(90deg, oklch(0.55 0.24 265 / 0.12), oklch(0.55 0.24 265 / 0.03)) !important;
+  border-left: 3px solid oklch(0.55 0.24 265);
+  font-weight: 600;
+}
+
+/* ==========================================
+   Background Pattern
+   ========================================== */
+
+.bg-pattern {
+  background-color: oklch(0.97 0.005 265);
+  background-image: radial-gradient(oklch(0.55 0.24 265 / 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+[data-theme="dark"] .bg-pattern {
+  background-color: oklch(0.17 0.01 265);
+  background-image: radial-gradient(oklch(0.55 0.24 265 / 0.06) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ==========================================
+   Icon Container
+   ========================================== */
+
+.icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  flex-shrink: 0;
+}
+
+.icon-box-sm {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+}
+
+/* ==========================================
+   Empty State
+   ========================================== */
+
+.empty-state-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, oklch(0.55 0.24 265 / 0.08), oklch(0.65 0.19 330 / 0.04));
+  margin: 0 auto 0.75rem;
+}
+
+/* ==========================================
+   Input Focus Enhancement
+   ========================================== */
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: oklch(0.55 0.24 265) !important;
+  box-shadow: 0 0 0 3px oklch(0.55 0.24 265 / 0.1) !important;
+}
+
+/* ==========================================
+   Custom Scrollbar
+   ========================================== */
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.7 0.02 265 / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.6 0.04 265 / 0.5);
+}
+
+/* ==========================================
+   Section Divider
+   ========================================== */
+
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(0.55 0.24 265 / 0.15), transparent);
+  margin: 0.25rem 0;
+}
+
+/* ==========================================
+   Bottom Nav Active Indicator
+   ========================================== */
+
+.bottom-nav-item {
+  position: relative;
+}
+
+.bottom-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(90deg, var(--color-gradient-start), var(--color-gradient-end));
 }

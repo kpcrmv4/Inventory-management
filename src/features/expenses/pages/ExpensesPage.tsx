@@ -174,9 +174,14 @@ export default function ExpensesPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">ค่าใช้จ่าย</h1>
-          <p className="text-base-content/60 mt-1">{formatMonthYear(month, year)}</p>
+        <div className="flex items-center gap-4">
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <Calculator size={22} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">ค่าใช้จ่าย</h1>
+            <p className="text-base-content/50 text-sm mt-0.5">{formatMonthYear(month, year)}</p>
+          </div>
         </div>
         <div className="flex gap-2">
           <select
@@ -205,7 +210,7 @@ export default function ExpensesPage() {
       </div>
 
       {/* ค่าใช้จ่ายคงที่ (Fixed) */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 card-enhanced">
         <div className="card-body">
           <h2 className="card-title text-lg">
             <Home className="w-5 h-5" />
@@ -248,7 +253,7 @@ export default function ExpensesPage() {
       </div>
 
       {/* ค่าเสื่อม (0601) */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 card-enhanced">
         <div className="card-body">
           <h2 className="card-title text-lg">
             <Calculator className="w-5 h-5" />
@@ -313,7 +318,7 @@ export default function ExpensesPage() {
       </div>
 
       {/* ค่าใช้จ่ายรายวัน: น้ำแข็ง (0206) */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 card-enhanced">
         <div className="card-body">
           <h2 className="card-title text-lg">
             <Snowflake className="w-5 h-5" />
@@ -409,7 +414,7 @@ export default function ExpensesPage() {
       </div>
 
       {/* ค่าใช้จ่ายรายวัน: แก๊ส (0207) */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 card-enhanced">
         <div className="card-body">
           <h2 className="card-title text-lg">
             <Flame className="w-5 h-5" />
@@ -503,7 +508,7 @@ export default function ExpensesPage() {
       </div>
 
       {/* Controllable Expenses (0404-0415) */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 card-enhanced">
         <div className="card-body">
           <h2 className="card-title text-lg">
             <Settings className="w-5 h-5" />
@@ -563,7 +568,7 @@ export default function ExpensesPage() {
       </div>
 
       {/* Non-controllable Expenses (0503-0510) */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 card-enhanced">
         <div className="card-body">
           <h2 className="card-title text-lg">ค่าใช้จ่ายที่ควบคุมไม่ได้ (Non-controllable)</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

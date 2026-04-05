@@ -159,10 +159,12 @@ export default function TenantManagement() {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Building2 className="w-6 h-6" />
-          จัดการ Tenant
-        </h1>
+        <div className="flex items-center gap-4">
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <Building2 size={22} />
+          </div>
+          <h1 className="text-2xl font-bold">จัดการ Tenant</h1>
+        </div>
         <button className="btn btn-ghost btn-sm" onClick={fetchTenants}>
           <RefreshCw className="w-4 h-4" />
           รีเฟรช
