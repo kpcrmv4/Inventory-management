@@ -29,7 +29,10 @@ export function useExpenses(branchId: string | null, month: number, year: number
   const effectiveBranchId = branchId
 
   const fetchExpenses = useCallback(async () => {
-    if (!effectiveBranchId) return
+    if (!effectiveBranchId) {
+      setLoading(false)
+      return
+    }
     setLoading(true)
 
     try {

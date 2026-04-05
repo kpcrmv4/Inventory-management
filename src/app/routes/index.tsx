@@ -5,35 +5,50 @@ import { AuthLayout } from '../../components/layout/AuthLayout'
 import { ProtectedRoute } from './ProtectedRoute'
 import { RoleRoute } from './RoleRoute'
 
+// Retry dynamic import on failure (handles stale chunks after new deploys)
+function lazyRetry(importFn: () => Promise<any>) {
+  return lazy(() =>
+    importFn().catch(() => {
+      // Chunk likely outdated after deploy — reload once
+      const key = 'chunk-retry'
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, '1')
+        window.location.reload()
+      }
+      return importFn()
+    })
+  )
+}
+
 // Auth pages
-const LoginPage = lazy(() => import('../../features/auth/pages/LoginPage'))
-const RegisterPage = lazy(() => import('../../features/auth/pages/RegisterPage'))
-const PendingPage = lazy(() => import('../../features/auth/pages/PendingPage'))
+const LoginPage = lazyRetry(() => import('../../features/auth/pages/LoginPage'))
+const RegisterPage = lazyRetry(() => import('../../features/auth/pages/RegisterPage'))
+const PendingPage = lazyRetry(() => import('../../features/auth/pages/PendingPage'))
 
 // SuperAdmin
-const SADashboard = lazy(() => import('../../features/auth/pages/SuperAdminDashboard'))
-const TenantManagement = lazy(() => import('../../features/auth/pages/TenantManagement'))
-const SASettings = lazy(() => import('../../features/auth/pages/SuperAdminSettingsPage'))
+const SADashboard = lazyRetry(() => import('../../features/auth/pages/SuperAdminDashboard'))
+const TenantManagement = lazyRetry(() => import('../../features/auth/pages/TenantManagement'))
+const SASettings = lazyRetry(() => import('../../features/auth/pages/SuperAdminSettingsPage'))
 
 // App pages
-const Dashboard = lazy(() => import('../../features/report/pages/DashboardPage'))
-const MainTable = lazy(() => import('../../features/inventory/pages/MainTablePage'))
-const Receiving = lazy(() => import('../../features/inventory/pages/ReceivingPage'))
-const RawWaste = lazy(() => import('../../features/inventory/pages/RawWastePage'))
-const ParStock = lazy(() => import('../../features/inventory/pages/ParStockPage'))
-const InventoryReport = lazy(() => import('../../features/inventory/pages/InventoryReportPage'))
-const DailySale = lazy(() => import('../../features/daily-sale/pages/DailySalePage'))
-const Expenses = lazy(() => import('../../features/expenses/pages/ExpensesPage'))
-const PLReport = lazy(() => import('../../features/pl/pages/PLReportPage'))
-const FTLabor = lazy(() => import('../../features/labor/pages/FTLaborPage'))
-const PTLabor = lazy(() => import('../../features/labor/pages/PTLaborPage'))
-const HQLabor = lazy(() => import('../../features/labor/pages/HQLaborPage'))
-const Recipes = lazy(() => import('../../features/recipes/pages/RecipesPage'))
-const RecipeDetail = lazy(() => import('../../features/recipes/pages/RecipeDetailPage'))
-const RecipeDashboard = lazy(() => import('../../features/recipes/pages/RecipeDashboardPage'))
-const Complaints = lazy(() => import('../../features/complaints/pages/ComplaintsPage'))
-const BranchSettings = lazy(() => import('../../features/settings/pages/BranchSettingsPage'))
-const UserSettings = lazy(() => import('../../features/settings/pages/UserSettingsPage'))
+const Dashboard = lazyRetry(() => import('../../features/report/pages/DashboardPage'))
+const MainTable = lazyRetry(() => import('../../features/inventory/pages/MainTablePage'))
+const Receiving = lazyRetry(() => import('../../features/inventory/pages/ReceivingPage'))
+const RawWaste = lazyRetry(() => import('../../features/inventory/pages/RawWastePage'))
+const ParStock = lazyRetry(() => import('../../features/inventory/pages/ParStockPage'))
+const InventoryReport = lazyRetry(() => import('../../features/inventory/pages/InventoryReportPage'))
+const DailySale = lazyRetry(() => import('../../features/daily-sale/pages/DailySalePage'))
+const Expenses = lazyRetry(() => import('../../features/expenses/pages/ExpensesPage'))
+const PLReport = lazyRetry(() => import('../../features/pl/pages/PLReportPage'))
+const FTLabor = lazyRetry(() => import('../../features/labor/pages/FTLaborPage'))
+const PTLabor = lazyRetry(() => import('../../features/labor/pages/PTLaborPage'))
+const HQLabor = lazyRetry(() => import('../../features/labor/pages/HQLaborPage'))
+const Recipes = lazyRetry(() => import('../../features/recipes/pages/RecipesPage'))
+const RecipeDetail = lazyRetry(() => import('../../features/recipes/pages/RecipeDetailPage'))
+const RecipeDashboard = lazyRetry(() => import('../../features/recipes/pages/RecipeDashboardPage'))
+const Complaints = lazyRetry(() => import('../../features/complaints/pages/ComplaintsPage'))
+const BranchSettings = lazyRetry(() => import('../../features/settings/pages/BranchSettingsPage'))
+const UserSettings = lazyRetry(() => import('../../features/settings/pages/UserSettingsPage'))
 
 function PageLoader() {
   return (
