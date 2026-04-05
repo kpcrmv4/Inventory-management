@@ -196,7 +196,7 @@ export default function RawWastePage() {
       {/* Date picker */}
       <div className="card bg-base-100 card-enhanced mb-5">
         <div className="card-body p-4 flex flex-row items-center gap-3">
-          <div className="icon-box-sm bg-primary/10 text-primary rounded-lg">
+          <div className="icon-box-sm bg-primary/10 text-primary">
             <Calendar size={16} />
           </div>
           <input

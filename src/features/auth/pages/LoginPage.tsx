@@ -44,7 +44,7 @@ export default function LoginPage() {
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <div className="icon-box-sm bg-primary/10 text-primary rounded-lg">
+        <div className="icon-box-sm bg-primary/10 text-primary">
           <LogIn size={18} />
         </div>
         <h1 className="text-xl font-bold">เข้าสู่ระบบ</h1>

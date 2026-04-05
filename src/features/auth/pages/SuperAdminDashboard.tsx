@@ -100,9 +100,15 @@ export default function SuperAdminDashboard() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl sm:text-2xl font-bold text-base-content">
-          SuperAdmin Dashboard
-        </h1>
+        <div className="flex items-center gap-4">
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <Building2 size={22} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">SuperAdmin Dashboard</h1>
+            <p className="text-sm text-base-content/50">จัดการระบบทั้งหมด</p>
+          </div>
+        </div>
         <button
           className="btn btn-ghost btn-sm btn-circle"
           onClick={fetchStats}

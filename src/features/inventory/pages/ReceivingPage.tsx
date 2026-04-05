@@ -196,7 +196,7 @@ export default function ReceivingPage() {
       {/* Date picker */}
       <div className="card bg-base-100 card-enhanced">
         <div className="card-body p-4 flex flex-row items-center gap-3">
-          <div className="icon-box-sm bg-primary/10 text-primary rounded-lg">
+          <div className="icon-box-sm bg-primary/10 text-primary">
             <Calendar size={16} />
           </div>
           <input

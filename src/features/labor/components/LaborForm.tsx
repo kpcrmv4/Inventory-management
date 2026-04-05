@@ -15,7 +15,7 @@ export function LaborForm({ employeeName, position, record, onUpdate }: LaborFor
   }
 
   return (
-    <div className="collapse collapse-arrow bg-base-200 mb-2">
+    <div className="collapse collapse-arrow bg-base-100 card-enhanced">
       <input type="checkbox" />
       <div className="collapse-title font-medium flex items-center justify-between">
         <div>

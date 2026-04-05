@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import {
-  LayoutDashboard, Package, Receipt, BookOpen, MoreHorizontal,
+  LayoutDashboard, Package, Receipt, MoreHorizontal,
   ChefHat, Settings, LayoutGrid,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
@@ -16,7 +16,6 @@ const appLeftItems = [
 
 const appRightItems = [
   { to: '/app/pl/daily-sale', label: 'ยอดขาย', icon: Receipt },
-  { to: '/app/recipes', label: 'สูตรอาหาร', icon: BookOpen },
 ]
 
 const appCenterItem = { to: '/app/inventory/main-table', label: 'คลังสินค้า', icon: LayoutGrid }
@@ -32,16 +31,16 @@ function NavItem({ to, label, icon: Icon }: { to: string; label: string; icon: R
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `bottom-nav-item flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all duration-200 ${
+        `flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all duration-200 ${
           isActive
-            ? 'active text-primary'
+            ? 'text-primary'
             : 'text-base-content/40'
         }`
       }
     >
       {({ isActive }) => (
         <>
-          <Icon size={21} strokeWidth={isActive ? 2.3 : 1.7} />
+          <Icon size={22} strokeWidth={isActive ? 2.3 : 1.6} />
           <span className={`text-[10px] leading-tight ${isActive ? 'font-bold' : 'font-medium'}`}>
             {label}
           </span>
@@ -76,38 +75,41 @@ export function BottomNav({ onMoreClick }: BottomNavProps) {
   const isCenterActive = location.pathname === appCenterItem.to || location.pathname.startsWith(appCenterItem.to + '/')
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 lg:hidden z-30 border-t border-base-200/60 bg-base-100/90 glass-effect safe-area-bottom">
-      <div className="flex items-center justify-around h-16 relative">
-        {/* Left items */}
+    <div className="fixed bottom-0 left-0 right-0 lg:hidden z-30 bg-base-100/90 glass-effect safe-area-bottom">
+      <div className="flex items-center h-16 relative">
+        {/* Left 2 items */}
         {appLeftItems.map((item) => (
           <NavItem key={item.to} {...item} />
         ))}
 
         {/* Center floating button */}
-        <div className="flex-1 flex items-center justify-center relative">
-          <NavLink to={appCenterItem.to} className="bottom-nav-center-btn">
-            <appCenterItem.icon size={24} strokeWidth={2} />
+        <div className="flex-1 flex flex-col items-center justify-end h-full pb-1.5">
+          <NavLink
+            to={appCenterItem.to}
+            className="bottom-nav-center-btn -mt-7"
+          >
+            <appCenterItem.icon size={26} strokeWidth={2} />
           </NavLink>
-          <span className={`text-[10px] leading-tight mt-7 font-medium ${
-            isCenterActive ? 'text-primary font-bold' : 'text-base-content/40'
+          <span className={`text-[10px] leading-tight mt-1 ${
+            isCenterActive ? 'text-primary font-bold' : 'text-base-content/40 font-medium'
           }`}>
             {appCenterItem.label}
           </span>
         </div>
 
-        {/* Right items */}
+        {/* Right item */}
         {appRightItems.map((item) => (
           <NavItem key={item.to} {...item} />
         ))}
 
         {/* More button */}
         <button
-          className={`bottom-nav-item flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all duration-200 ${
+          className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all duration-200 ${
             isMoreActive ? 'text-primary' : 'text-base-content/40'
           }`}
           onClick={onMoreClick}
         >
-          <MoreHorizontal size={21} strokeWidth={isMoreActive ? 2.3 : 1.7} />
+          <MoreHorizontal size={22} strokeWidth={isMoreActive ? 2.3 : 1.6} />
           <span className={`text-[10px] leading-tight ${isMoreActive ? 'font-bold' : 'font-medium'}`}>
             เพิ่มเติม
           </span>
