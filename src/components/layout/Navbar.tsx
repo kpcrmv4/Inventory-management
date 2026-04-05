@@ -24,7 +24,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
 
       <div className="flex-1 flex items-center gap-3">
         <div className="hidden lg:flex items-center gap-2">
-          <div className="icon-box-sm bg-gradient-brand text-white rounded-lg">
+          <div className="icon-box-sm bg-gradient-brand text-white">
             <span className="text-xs font-bold">IV</span>
           </div>
         </div>
