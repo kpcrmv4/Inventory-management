@@ -69,10 +69,11 @@ export function useLabor(branchId: string | null, month: number, year: number) {
     setLoading(true)
 
     try {
+      // monthly_labor has no branch_id — filter via employees relationship
       const { data, error } = await supabase
         .from('monthly_labor')
-        .select('*')
-        .eq('branch_id', branchId)
+        .select('*, employees!inner(branch_id)')
+        .eq('employees.branch_id', branchId)
         .eq('month', month)
         .eq('year', year)
 
@@ -96,12 +97,12 @@ export function useLabor(branchId: string | null, month: number, year: number) {
             incentive: row.incentive,
             foodAllowance: row.food_allowance,
             transportAllowance: row.transport_allowance,
-            diligence: row.diligence,
+            diligence: row.diligence_allowance,
             totalIncome: row.total_income,
-            sickLeaveDays: row.sick_leave_days,
-            sickLeaveAmount: row.sick_leave_amount,
-            personalLeaveDays: row.personal_leave_days,
-            personalLeaveAmount: row.personal_leave_amount,
+            sickLeaveDays: row.sick_days,
+            sickLeaveAmount: row.sick_amount,
+            personalLeaveDays: row.personal_days,
+            personalLeaveAmount: row.personal_amount,
             absentDays: row.absent_days,
             absentAmount: row.absent_amount,
             lateMinutes: row.late_minutes,
@@ -186,16 +187,20 @@ export function useLabor(branchId: string | null, month: number, year: number) {
     setSaving(true)
 
     try {
-      // Delete existing records
-      await supabase
-        .from('monthly_labor')
-        .delete()
-        .eq('branch_id', branchId)
-        .eq('month', month)
-        .eq('year', year)
+      // Get employee IDs for this branch to scope the delete
+      const employeeIds = Array.from(records.keys())
+
+      if (employeeIds.length > 0) {
+        // Delete existing records for these employees in this month
+        await supabase
+          .from('monthly_labor')
+          .delete()
+          .in('employee_id', employeeIds)
+          .eq('month', month)
+          .eq('year', year)
+      }
 
       const rows = Array.from(records.values()).map((r) => ({
-        branch_id: branchId,
         employee_id: r.employeeId,
         month,
         year,
@@ -211,12 +216,12 @@ export function useLabor(branchId: string | null, month: number, year: number) {
         incentive: r.incentive,
         food_allowance: r.foodAllowance,
         transport_allowance: r.transportAllowance,
-        diligence: r.diligence,
+        diligence_allowance: r.diligence,
         total_income: r.totalIncome,
-        sick_leave_days: r.sickLeaveDays,
-        sick_leave_amount: r.sickLeaveAmount,
-        personal_leave_days: r.personalLeaveDays,
-        personal_leave_amount: r.personalLeaveAmount,
+        sick_days: r.sickLeaveDays,
+        sick_amount: r.sickLeaveAmount,
+        personal_days: r.personalLeaveDays,
+        personal_amount: r.personalLeaveAmount,
         absent_days: r.absentDays,
         absent_amount: r.absentAmount,
         late_minutes: r.lateMinutes,
@@ -224,6 +229,7 @@ export function useLabor(branchId: string | null, month: number, year: number) {
         loan_deduction: r.loanDeduction,
         tax_deduction: r.taxDeduction,
         social_security: r.socialSecurity,
+        bonus: 0,
         total_deductions: r.totalDeductions,
         net_pay: r.netPay,
       }))
