@@ -8,314 +8,213 @@ interface LaborFormProps {
   onUpdate: (updates: Partial<LaborRecord>) => void
 }
 
-export function LaborForm({ employeeName, position, record, onUpdate }: LaborFormProps) {
-  const parseNum = (val: string) => {
-    const n = parseFloat(val)
-    return isNaN(n) ? 0 : n
-  }
-
+function Field({ label, value, onChange, placeholder }: {
+  label: string
+  value: number | ''
+  onChange: (v: number) => void
+  placeholder?: string
+}) {
   return (
-    <div className="collapse collapse-arrow bg-base-100 card-enhanced">
-      <input type="checkbox" />
-      <div className="collapse-title font-medium flex items-center justify-between">
-        <div>
-          <span className="font-semibold">{employeeName}</span>
-          <span className="text-base-content/60 text-sm ml-2">({position})</span>
-        </div>
-        <div className="text-right text-sm">
-          <span className="text-success font-semibold">{formatBaht(record.netPay)}</span>
+    <div className="form-control">
+      <label className="label py-0.5">
+        <span className="label-text text-[11px] font-medium text-base-content/50">{label}</span>
+      </label>
+      <input
+        type="number"
+        className="input input-bordered input-sm text-right"
+        value={value || ''}
+        onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+        placeholder={placeholder}
+      />
+    </div>
+  )
+}
+
+function DualField({ label, inputValue, displayValue, onChange, placeholder, color = '' }: {
+  label: string
+  inputValue: number | ''
+  displayValue: string
+  onChange: (v: number) => void
+  placeholder?: string
+  color?: string
+}) {
+  return (
+    <div className="form-control">
+      <label className="label py-0.5">
+        <span className="label-text text-[11px] font-medium text-base-content/50">{label}</span>
+      </label>
+      <div className="flex gap-1.5">
+        <input
+          type="number"
+          className="input input-bordered input-sm w-20 text-right"
+          value={inputValue || ''}
+          onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+          placeholder={placeholder}
+        />
+        <div className={`flex-1 flex items-center justify-end text-xs font-medium px-3 rounded-xl bg-base-200/50 ${color}`}>
+          {displayValue}
         </div>
       </div>
-      <div className="collapse-content space-y-4">
-        {/* รายได้ */}
-        <div>
-          <h4 className="font-semibold text-sm mb-2 text-primary">รายได้</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {/* เงินเดือน */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">เงินเดือน</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm text-right"
-                value={record.salary || ''}
-                onChange={(e) => onUpdate({ salary: parseNum(e.target.value) })}
-              />
-            </div>
+    </div>
+  )
+}
 
-            {/* OT 1.0x */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">OT 1.0x (ชม.)</span>
-              </label>
-              <div className="flex gap-1">
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-20 text-right"
-                  value={record.ot1xHours || ''}
-                  onChange={(e) => onUpdate({ ot1xHours: parseNum(e.target.value) })}
-                  placeholder="ชม."
-                />
-                <div className="input input-bordered input-sm flex-1 flex items-center justify-end bg-base-100 text-xs">
-                  {formatBaht(record.ot1xAmount)}
-                </div>
-              </div>
-            </div>
+export function LaborForm({ employeeName, position, record, onUpdate }: LaborFormProps) {
+  return (
+    <div className="collapse collapse-arrow bg-base-100 card-enhanced overflow-hidden">
+      <input type="checkbox" />
 
-            {/* OT 1.5x */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">OT 1.5x (ชม.)</span>
-              </label>
-              <div className="flex gap-1">
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-20 text-right"
-                  value={record.ot15xHours || ''}
-                  onChange={(e) => onUpdate({ ot15xHours: parseNum(e.target.value) })}
-                  placeholder="ชม."
-                />
-                <div className="input input-bordered input-sm flex-1 flex items-center justify-end bg-base-100 text-xs">
-                  {formatBaht(record.ot15xAmount)}
-                </div>
-              </div>
-            </div>
-
-            {/* OT 3.0x */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">OT 3.0x (ชม.)</span>
-              </label>
-              <div className="flex gap-1">
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-20 text-right"
-                  value={record.ot3xHours || ''}
-                  onChange={(e) => onUpdate({ ot3xHours: parseNum(e.target.value) })}
-                  placeholder="ชม."
-                />
-                <div className="input input-bordered input-sm flex-1 flex items-center justify-end bg-base-100 text-xs">
-                  {formatBaht(record.ot3xAmount)}
-                </div>
-              </div>
-            </div>
-
-            {/* OT custom */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">OT อื่นๆ (บาท)</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm text-right"
-                value={record.otCustom || ''}
-                onChange={(e) => onUpdate({ otCustom: parseNum(e.target.value) })}
-              />
-            </div>
-
-            {/* Service Charge */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">Service Charge</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm text-right"
-                value={record.serviceCharge || ''}
-                onChange={(e) => onUpdate({ serviceCharge: parseNum(e.target.value) })}
-              />
-            </div>
-
-            {/* Incentive */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">Incentive</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm text-right"
-                value={record.incentive || ''}
-                onChange={(e) => onUpdate({ incentive: parseNum(e.target.value) })}
-              />
-            </div>
-
-            {/* ค่าอาหาร */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">ค่าอาหาร</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm text-right"
-                value={record.foodAllowance || ''}
-                onChange={(e) => onUpdate({ foodAllowance: parseNum(e.target.value) })}
-              />
-            </div>
-
-            {/* ค่ารถ */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">ค่ารถ</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm text-right"
-                value={record.transportAllowance || ''}
-                onChange={(e) => onUpdate({ transportAllowance: parseNum(e.target.value) })}
-              />
-            </div>
-
-            {/* เบี้ยขยัน */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">เบี้ยขยัน</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm text-right"
-                value={record.diligence || ''}
-                onChange={(e) => onUpdate({ diligence: parseNum(e.target.value) })}
-              />
-            </div>
+      {/* Header */}
+      <div className="collapse-title flex items-center justify-between pr-10">
+        <div className="flex items-center gap-3">
+          <div className="icon-circle-sm bg-primary/10">
+            <span className="text-xs font-bold text-primary">
+              {employeeName.charAt(0)}
+            </span>
           </div>
-          <div className="text-right mt-2 font-semibold text-sm text-primary">
-            รายได้รวม: {formatBaht(record.totalIncome)}
+          <div>
+            <span className="font-bold text-sm">{employeeName}</span>
+            <span className="text-base-content/40 text-xs ml-1.5">({position})</span>
           </div>
         </div>
+        <span className="text-emerald-600 font-bold text-sm">{formatBaht(record.netPay)}</span>
+      </div>
 
-        <div className="divider my-1" />
+      {/* Content */}
+      <div className="collapse-content px-4 pb-4">
+        {/* รายได้ */}
+        <div className="rounded-xl bg-emerald-50 p-4 mt-1 dark:bg-emerald-900/10">
+          <h4 className="font-bold text-xs uppercase tracking-wider text-emerald-600 mb-3">
+            รายได้
+          </h4>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-2">
+            <Field
+              label="เงินเดือน"
+              value={record.salary}
+              onChange={(v) => onUpdate({ salary: v })}
+            />
+            <DualField
+              label="OT 1.0x (ชม.)"
+              inputValue={record.ot1xHours}
+              displayValue={formatBaht(record.ot1xAmount)}
+              onChange={(v) => onUpdate({ ot1xHours: v })}
+              placeholder="ชม."
+            />
+            <DualField
+              label="OT 1.5x (ชม.)"
+              inputValue={record.ot15xHours}
+              displayValue={formatBaht(record.ot15xAmount)}
+              onChange={(v) => onUpdate({ ot15xHours: v })}
+              placeholder="ชม."
+            />
+            <DualField
+              label="OT 3.0x (ชม.)"
+              inputValue={record.ot3xHours}
+              displayValue={formatBaht(record.ot3xAmount)}
+              onChange={(v) => onUpdate({ ot3xHours: v })}
+              placeholder="ชม."
+            />
+            <Field
+              label="OT อื่นๆ"
+              value={record.otCustom}
+              onChange={(v) => onUpdate({ otCustom: v })}
+            />
+            <Field
+              label="Service Charge"
+              value={record.serviceCharge}
+              onChange={(v) => onUpdate({ serviceCharge: v })}
+            />
+            <Field
+              label="Incentive"
+              value={record.incentive}
+              onChange={(v) => onUpdate({ incentive: v })}
+            />
+            <Field
+              label="ค่าอาหาร"
+              value={record.foodAllowance}
+              onChange={(v) => onUpdate({ foodAllowance: v })}
+            />
+            <Field
+              label="ค่ารถ"
+              value={record.transportAllowance}
+              onChange={(v) => onUpdate({ transportAllowance: v })}
+            />
+            <Field
+              label="เบี้ยขยัน"
+              value={record.diligence}
+              onChange={(v) => onUpdate({ diligence: v })}
+            />
+          </div>
+          <div className="text-right mt-3 pt-2 border-t border-emerald-200/50 dark:border-emerald-700/30">
+            <span className="text-xs text-base-content/50">รายได้รวม</span>
+            <span className="font-bold text-sm text-emerald-600 ml-2">{formatBaht(record.totalIncome)}</span>
+          </div>
+        </div>
 
         {/* รายหัก */}
-        <div>
-          <h4 className="font-semibold text-sm mb-2 text-error">รายหัก</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {/* ลาป่วย */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">ลาป่วย (วัน)</span>
-              </label>
-              <div className="flex gap-1">
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-20 text-right"
-                  value={record.sickLeaveDays || ''}
-                  onChange={(e) => onUpdate({ sickLeaveDays: parseNum(e.target.value) })}
-                  placeholder="วัน"
-                />
-                <div className="input input-bordered input-sm flex-1 flex items-center justify-end bg-base-100 text-xs text-error">
-                  {formatBaht(record.sickLeaveAmount)}
-                </div>
-              </div>
-            </div>
-
-            {/* ลากิจ */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">ลากิจ (วัน)</span>
-              </label>
-              <div className="flex gap-1">
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-20 text-right"
-                  value={record.personalLeaveDays || ''}
-                  onChange={(e) => onUpdate({ personalLeaveDays: parseNum(e.target.value) })}
-                  placeholder="วัน"
-                />
-                <div className="input input-bordered input-sm flex-1 flex items-center justify-end bg-base-100 text-xs text-error">
-                  {formatBaht(record.personalLeaveAmount)}
-                </div>
-              </div>
-            </div>
-
-            {/* ขาดงาน */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">ขาดงาน (วัน)</span>
-              </label>
-              <div className="flex gap-1">
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-20 text-right"
-                  value={record.absentDays || ''}
-                  onChange={(e) => onUpdate({ absentDays: parseNum(e.target.value) })}
-                  placeholder="วัน"
-                />
-                <div className="input input-bordered input-sm flex-1 flex items-center justify-end bg-base-100 text-xs text-error">
-                  {formatBaht(record.absentAmount)}
-                </div>
-              </div>
-            </div>
-
-            {/* มาสาย */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">มาสาย (นาที)</span>
-              </label>
-              <div className="flex gap-1">
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-20 text-right"
-                  value={record.lateMinutes || ''}
-                  onChange={(e) => onUpdate({ lateMinutes: parseNum(e.target.value) })}
-                  placeholder="นาที"
-                />
-                <div className="input input-bordered input-sm flex-1 flex items-center justify-end bg-base-100 text-xs text-error">
-                  {formatBaht(record.lateAmount)}
-                </div>
-              </div>
-            </div>
-
-            {/* หักเงินกู้ */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">หักเงินกู้</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm text-right"
-                value={record.loanDeduction || ''}
-                onChange={(e) => onUpdate({ loanDeduction: parseNum(e.target.value) })}
-              />
-            </div>
-
-            {/* ภาษี */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">ภาษี</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm text-right"
-                value={record.taxDeduction || ''}
-                onChange={(e) => onUpdate({ taxDeduction: parseNum(e.target.value) })}
-              />
-            </div>
-
-            {/* ประกันสังคม */}
-            <div className="form-control">
-              <label className="label py-1">
-                <span className="label-text text-xs">ประกันสังคม</span>
-              </label>
-              <input
-                type="number"
-                className="input input-bordered input-sm text-right"
-                value={record.socialSecurity || ''}
-                onChange={(e) => onUpdate({ socialSecurity: parseNum(e.target.value) })}
-              />
-            </div>
+        <div className="rounded-xl bg-red-50 p-4 mt-3 dark:bg-red-900/10">
+          <h4 className="font-bold text-xs uppercase tracking-wider text-red-500 mb-3">
+            รายหัก
+          </h4>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-2">
+            <DualField
+              label="ลาป่วย (วัน)"
+              inputValue={record.sickLeaveDays}
+              displayValue={formatBaht(record.sickLeaveAmount)}
+              onChange={(v) => onUpdate({ sickLeaveDays: v })}
+              placeholder="วัน"
+              color="text-red-500"
+            />
+            <DualField
+              label="ลากิจ (วัน)"
+              inputValue={record.personalLeaveDays}
+              displayValue={formatBaht(record.personalLeaveAmount)}
+              onChange={(v) => onUpdate({ personalLeaveDays: v })}
+              placeholder="วัน"
+              color="text-red-500"
+            />
+            <DualField
+              label="ขาดงาน (วัน)"
+              inputValue={record.absentDays}
+              displayValue={formatBaht(record.absentAmount)}
+              onChange={(v) => onUpdate({ absentDays: v })}
+              placeholder="วัน"
+              color="text-red-500"
+            />
+            <DualField
+              label="มาสาย (นาที)"
+              inputValue={record.lateMinutes}
+              displayValue={formatBaht(record.lateAmount)}
+              onChange={(v) => onUpdate({ lateMinutes: v })}
+              placeholder="นาที"
+              color="text-red-500"
+            />
+            <Field
+              label="หักเงินกู้"
+              value={record.loanDeduction}
+              onChange={(v) => onUpdate({ loanDeduction: v })}
+            />
+            <Field
+              label="ภาษี"
+              value={record.taxDeduction}
+              onChange={(v) => onUpdate({ taxDeduction: v })}
+            />
+            <Field
+              label="ประกันสังคม"
+              value={record.socialSecurity}
+              onChange={(v) => onUpdate({ socialSecurity: v })}
+            />
           </div>
-          <div className="text-right mt-2 font-semibold text-sm text-error">
-            รายหักรวม: {formatBaht(record.totalDeductions)}
+          <div className="text-right mt-3 pt-2 border-t border-red-200/50 dark:border-red-700/30">
+            <span className="text-xs text-base-content/50">รายหักรวม</span>
+            <span className="font-bold text-sm text-red-500 ml-2">{formatBaht(record.totalDeductions)}</span>
           </div>
         </div>
 
-        <div className="divider my-1" />
-
         {/* สรุป */}
-        <div className="flex justify-between items-center px-2 py-2 bg-base-300 rounded-lg">
-          <span className="font-semibold">จ่ายสุทธิ</span>
-          <span className="font-bold text-lg text-success">{formatBaht(record.netPay)}</span>
+        <div className="rounded-xl bg-gradient-brand p-4 mt-3 flex justify-between items-center">
+          <span className="font-bold text-white/80 text-sm">จ่ายสุทธิ</span>
+          <span className="font-extrabold text-xl text-white">{formatBaht(record.netPay)}</span>
         </div>
       </div>
     </div>
