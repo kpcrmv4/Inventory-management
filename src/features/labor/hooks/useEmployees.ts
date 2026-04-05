@@ -32,7 +32,10 @@ export function useEmployees(branchId: string | null, type: EmployeeType) {
   const effectiveBranchId = branchId
 
   const fetchEmployees = useCallback(async () => {
-    if (!effectiveBranchId) return
+    if (!effectiveBranchId) {
+      setLoading(false)
+      return
+    }
     setLoading(true)
 
     try {

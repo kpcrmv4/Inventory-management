@@ -62,7 +62,10 @@ export function useLabor(branchId: string | null, month: number, year: number) {
   const [saving, setSaving] = useState(false)
 
   const fetchLabor = useCallback(async () => {
-    if (!branchId) return
+    if (!branchId) {
+      setLoading(false)
+      return
+    }
     setLoading(true)
 
     try {
