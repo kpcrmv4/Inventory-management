@@ -212,34 +212,39 @@ export default function RawWastePage() {
       </div>
 
       {/* Add form */}
-      <div className="card bg-base-100 card-enhanced bg-gradient-brand-subtle mb-5">
-        <div className="card-body p-5">
-          <h3 className="font-semibold mb-3 flex items-center gap-2"><Plus size={18} className="text-primary" />เพิ่มรายการของเสีย</h3>
-          <div className="flex flex-col sm:flex-row gap-3 items-end">
-            <div className="form-control flex-1">
-              <label className="label py-0">
-                <span className="label-text text-xs">รายการ</span>
-              </label>
-              <select
-                className="select select-bordered select-sm w-full"
-                value={selectedItem}
-                onChange={(e) => setSelectedItem(e.target.value)}
-              >
-                <option value="">-- เลือกรายการ --</option>
-                {inventoryOptions.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name} ({item.unit})
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="form-control w-full sm:w-32">
-              <label className="label py-0">
-                <span className="label-text text-xs">จำนวน</span>
+      <div className="form-section mb-5">
+        <h3 className="font-bold text-base flex items-center gap-2 mb-4">
+          <div className="icon-circle-sm bg-primary/10">
+            <Plus size={16} className="text-primary" />
+          </div>
+          เพิ่มรายการของเสีย
+        </h3>
+        <div className="space-y-3">
+          <div className="form-control">
+            <label className="label py-1">
+              <span className="label-text text-xs font-semibold text-base-content/60">รายการ</span>
+            </label>
+            <select
+              className="select select-bordered select-sm w-full"
+              value={selectedItem}
+              onChange={(e) => setSelectedItem(e.target.value)}
+            >
+              <option value="">-- เลือกรายการ --</option>
+              {inventoryOptions.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name} ({item.unit})
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="form-control">
+              <label className="label py-1">
+                <span className="label-text text-xs font-semibold text-base-content/60">จำนวน</span>
               </label>
               <input
                 type="number"
-                className="input input-bordered input-sm"
+                className="input input-bordered input-sm w-full"
                 placeholder="0"
                 value={qty}
                 onChange={(e) => setQty(e.target.value)}
@@ -247,12 +252,12 @@ export default function RawWastePage() {
                 step="any"
               />
             </div>
-            <div className="form-control w-full sm:w-48">
-              <label className="label py-0">
-                <span className="label-text text-xs">ประเภท</span>
+            <div className="form-control">
+              <label className="label py-1">
+                <span className="label-text text-xs font-semibold text-base-content/60">ประเภท</span>
               </label>
               <select
-                className="select select-bordered select-sm"
+                className="select select-bordered select-sm w-full"
                 value={wasteType}
                 onChange={(e) => setWasteType(e.target.value as WasteType)}
               >
@@ -260,30 +265,34 @@ export default function RawWastePage() {
                 <option value="untrimmed">ยังไม่ตัดแต่ง</option>
               </select>
             </div>
-            <button
-              className="btn btn-primary btn-sm gap-1"
-              onClick={handleAdd}
-              disabled={submitting}
-            >
-              {submitting ? (
-                <span className="loading loading-spinner loading-xs" />
-              ) : (
-                <Plus className="w-4 h-4" />
-              )}
-              เพิ่ม
-            </button>
           </div>
+          <button
+            className="btn btn-primary btn-sm w-full gap-1"
+            onClick={handleAdd}
+            disabled={submitting}
+          >
+            {submitting ? (
+              <span className="loading loading-spinner loading-xs" />
+            ) : (
+              <Plus className="w-4 h-4" />
+            )}
+            เพิ่มรายการ
+          </button>
         </div>
       </div>
 
       {/* Entries table */}
       {loading ? (
         <div className="flex items-center justify-center h-32">
-          <span className="loading loading-spinner loading-lg" />
+          <span className="loading loading-spinner loading-lg text-primary" />
         </div>
       ) : entries.length === 0 ? (
-        <div className="text-center py-12 text-base-content/50">
-          ยังไม่มีรายการของเสียสำหรับวันที่เลือก
+        <div className="text-center py-16">
+          <div className="empty-state-icon animate-subtle-pulse">
+            <Trash size={32} className="text-base-content/30" />
+          </div>
+          <p className="text-base-content/40 font-medium">ยังไม่มีรายการของเสีย</p>
+          <p className="text-base-content/30 text-sm mt-1">สำหรับวันที่เลือก</p>
         </div>
       ) : (
         <>

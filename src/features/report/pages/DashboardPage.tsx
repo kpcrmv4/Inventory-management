@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  LayoutDashboard, TrendingUp, TrendingDown,
-  Package, Receipt, Users, FileText, MessageSquare,
-  ArrowRight,
+  TrendingUp, TrendingDown,
+  Package, Receipt, Users, FileText,
+  ArrowRight, Wallet, BookOpen,
 } from 'lucide-react'
 import { supabase } from '../../../lib/supabase'
 import { useAuth } from '../../../hooks/useAuth'
@@ -103,12 +103,12 @@ export default function DashboardPage() {
   }, [activeBranch?.id, currentMonth, currentYear, todayStr])
 
   const quickLinks = [
-    { to: '/app/inventory/main-table', icon: <Package size={20} />, label: 'คลังวัตถุดิบ', gradient: 'bg-gradient-card-blue' },
-    { to: '/app/inventory/receiving', icon: <Package size={20} />, label: 'รับของเข้า', gradient: 'bg-gradient-card-green' },
-    { to: '/app/pl/daily-sale', icon: <Receipt size={20} />, label: 'ยอดขายรายวัน', gradient: 'bg-gradient-card-orange' },
-    { to: '/app/pl/report', icon: <FileText size={20} />, label: 'งบ P&L', gradient: 'bg-gradient-card-purple', roles: ['owner'] },
-    { to: '/app/pl/expenses', icon: <Receipt size={20} />, label: 'ค่าใช้จ่าย', gradient: 'bg-gradient-card-blue' },
-    { to: '/app/complaints', icon: <MessageSquare size={20} />, label: 'ข้อร้องเรียน', gradient: 'bg-gradient-card-orange' },
+    { to: '/app/inventory/main-table', icon: <Package size={22} />, label: 'คลังวัตถุดิบ', bgClass: 'bg-blue-100 text-blue-600', darkBg: 'dark:bg-blue-900/30 dark:text-blue-400' },
+    { to: '/app/inventory/receiving', icon: <Package size={22} />, label: 'รับของเข้า', bgClass: 'bg-emerald-100 text-emerald-600', darkBg: 'dark:bg-emerald-900/30 dark:text-emerald-400' },
+    { to: '/app/pl/daily-sale', icon: <Receipt size={22} />, label: 'ยอดขาย', bgClass: 'bg-amber-100 text-amber-600', darkBg: 'dark:bg-amber-900/30 dark:text-amber-400' },
+    { to: '/app/pl/report', icon: <FileText size={22} />, label: 'งบ P&L', bgClass: 'bg-purple-100 text-purple-600', darkBg: 'dark:bg-purple-900/30 dark:text-purple-400', roles: ['owner'] },
+    { to: '/app/pl/expenses', icon: <Wallet size={22} />, label: 'ค่าใช้จ่าย', bgClass: 'bg-pink-100 text-pink-600', darkBg: 'dark:bg-pink-900/30 dark:text-pink-400' },
+    { to: '/app/recipes', icon: <BookOpen size={22} />, label: 'สูตรอาหาร', bgClass: 'bg-orange-100 text-orange-600', darkBg: 'dark:bg-orange-900/30 dark:text-orange-400' },
   ]
 
   const filteredLinks = quickLinks.filter(
@@ -118,16 +118,11 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
-          <LayoutDashboard size={22} />
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold">แดชบอร์ด</h1>
-          <p className="text-sm text-base-content/50">
-            {activeBranch?.name} | {formatMonthYear(currentMonth, currentYear)}
-          </p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold">แดชบอร์ด</h1>
+        <p className="text-sm text-base-content/50 mt-1">
+          {activeBranch?.name} | {formatMonthYear(currentMonth, currentYear)}
+        </p>
       </div>
 
       {loading && (
@@ -138,85 +133,78 @@ export default function DashboardPage() {
 
       {!loading && kpi && (
         <>
-          {/* KPI Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="card bg-base-100 card-enhanced bg-gradient-card-green">
-              <div className="card-body p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-base-content/60">ยอดขายวันนี้</span>
-                  <div className="icon-box-sm bg-success/10 text-success rounded-lg">
-                    <TrendingUp size={16} />
-                  </div>
+          {/* KPI Cards - pastel colored like reference apps */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* Today Sales */}
+            <div className="card kpi-card-green p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-base-content/60 font-medium">ยอดขายวันนี้</span>
+                <div className="icon-circle-sm bg-emerald-200/60">
+                  <TrendingUp size={16} className="text-emerald-600" />
                 </div>
-                <p className="text-2xl font-bold mt-1">{formatBaht(kpi.todaySales)}</p>
               </div>
+              <p className="text-2xl font-extrabold tracking-tight">{formatBaht(kpi.todaySales)}</p>
             </div>
 
-            <div className="card bg-base-100 card-enhanced bg-gradient-card-blue">
-              <div className="card-body p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-base-content/60">ยอดขายเดือนนี้</span>
-                  <div className="icon-box-sm bg-info/10 text-info rounded-lg">
-                    <TrendingUp size={16} />
-                  </div>
+            {/* Month Sales */}
+            <div className="card kpi-card-blue p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-base-content/60 font-medium">ยอดขายเดือนนี้</span>
+                <div className="icon-circle-sm bg-blue-200/60">
+                  <TrendingUp size={16} className="text-blue-600" />
                 </div>
-                <p className="text-2xl font-bold mt-1">{formatBaht(kpi.monthSales)}</p>
               </div>
+              <p className="text-2xl font-extrabold tracking-tight">{formatBaht(kpi.monthSales)}</p>
             </div>
 
-            <div className="card bg-base-100 card-enhanced bg-gradient-card-orange">
-              <div className="card-body p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-base-content/60">COGS %</span>
-                  <div className="icon-box-sm bg-warning/10 text-warning rounded-lg">
-                    <TrendingDown size={16} />
-                  </div>
+            {/* COGS % */}
+            <div className="card kpi-card-orange p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-base-content/60 font-medium">COGS %</span>
+                <div className="icon-circle-sm bg-amber-200/60">
+                  <TrendingDown size={16} className="text-amber-600" />
                 </div>
-                <p className="text-2xl font-bold mt-1">{formatPercent(kpi.cogsPercent)}</p>
-                <p className="text-xs text-base-content/40 mt-0.5">GP {formatPercent(kpi.gpPercent)}</p>
               </div>
+              <p className="text-2xl font-extrabold tracking-tight">{formatPercent(kpi.cogsPercent)}</p>
+              <p className="text-xs text-base-content/40 mt-1">GP {formatPercent(kpi.gpPercent)}</p>
             </div>
 
-            <div className="card bg-base-100 card-enhanced bg-gradient-card-purple">
-              <div className="card-body p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-base-content/60">จำนวนพนักงาน</span>
-                  <div className="icon-box-sm bg-primary/10 text-primary rounded-lg">
-                    <Users size={16} />
-                  </div>
+            {/* Employee Count */}
+            <div className="card kpi-card-purple p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-base-content/60 font-medium">พนักงาน</span>
+                <div className="icon-circle-sm bg-purple-200/60">
+                  <Users size={16} className="text-purple-600" />
                 </div>
-                <p className="text-2xl font-bold mt-1">{formatNumber(kpi.employeeCount, 0)} คน</p>
               </div>
+              <p className="text-2xl font-extrabold tracking-tight">{formatNumber(kpi.employeeCount, 0)} <span className="text-sm font-medium text-base-content/50">คน</span></p>
             </div>
           </div>
 
           {/* Monthly Summary Card */}
           <div className="card bg-base-100 card-enhanced">
-            <div className="card-body">
-              <h2 className="card-title text-lg">สรุปยอดขายเดือนนี้</h2>
-              <div className="overflow-x-auto">
-                <table className="table table-sm">
-                  <tbody>
-                    <tr>
-                      <td className="text-base-content/60">รายได้รวม</td>
-                      <td className="text-right font-mono">{formatBaht(kpi.monthRevenue)}</td>
-                    </tr>
-                    <tr>
-                      <td className="text-base-content/60">ต้นทุนขาย (COGS)</td>
-                      <td className="text-right font-mono text-error">{formatBaht(kpi.monthCOGS)}</td>
-                    </tr>
-                    <tr className="font-bold">
-                      <td>Gross Profit (โดยประมาณ)</td>
-                      <td className="text-right font-mono text-success">
-                        {formatBaht(kpi.monthRevenue - kpi.monthCOGS)}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+            <div className="card-body p-5">
+              <h2 className="font-bold text-base mb-3">สรุปยอดขายเดือนนี้</h2>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-base-content/60">รายได้รวม</span>
+                  <span className="font-mono font-semibold">{formatBaht(kpi.monthRevenue)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-base-content/60">ต้นทุนขาย (COGS)</span>
+                  <span className="font-mono font-semibold text-error">{formatBaht(kpi.monthCOGS)}</span>
+                </div>
+                <div className="section-divider" />
+                <div className="flex justify-between items-center">
+                  <span className="font-bold">Gross Profit (ประมาณ)</span>
+                  <span className="font-mono font-bold text-emerald-600">
+                    {formatBaht(kpi.monthRevenue - kpi.monthCOGS)}
+                  </span>
+                </div>
               </div>
               {profile?.role === 'owner' && (
-                <div className="card-actions justify-end mt-2">
-                  <Link to="/app/pl/report" className="btn btn-primary btn-sm gap-1">
+                <div className="mt-4">
+                  <Link to="/app/pl/report" className="btn btn-primary btn-sm w-full gap-1">
                     ดูงบ P&L ฉบับเต็ม <ArrowRight size={14} />
                   </Link>
                 </div>
@@ -228,17 +216,19 @@ export default function DashboardPage() {
 
       {/* Quick Links */}
       <div>
-        <h2 className="text-lg font-semibold mb-3">ทางลัด</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <h2 className="font-bold text-base mb-3">ทางลัด</h2>
+        <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {filteredLinks.map(link => (
             <Link
               key={link.to}
               to={link.to}
-              className={`card bg-base-100 card-enhanced hover:scale-[1.02] ${link.gradient}`}
+              className="card bg-base-100 card-enhanced hover:scale-[1.02] active:scale-[0.98] transition-transform"
             >
-              <div className="card-body items-center text-center p-4">
-                <div className="text-primary">{link.icon}</div>
-                <span className="text-sm font-medium mt-1">{link.label}</span>
+              <div className="card-body items-center text-center p-4 gap-2">
+                <div className={`icon-circle ${link.bgClass} ${link.darkBg}`}>
+                  {link.icon}
+                </div>
+                <span className="text-xs font-semibold">{link.label}</span>
               </div>
             </Link>
           ))}
