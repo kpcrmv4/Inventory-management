@@ -48,20 +48,43 @@
   background: linear-gradient(135deg, oklch(0.6 0.16 250 / 0.08), oklch(0.7 0.12 220 / 0.03));
 }
 
+[data-theme="dark"] .bg-gradient-card-blue {
+  background: linear-gradient(135deg, oklch(0.35 0.12 250 / 0.15), oklch(0.4 0.08 220 / 0.06));
+}
+
 .bg-gradient-card-green {
   background: linear-gradient(135deg, oklch(0.65 0.18 155 / 0.08), oklch(0.7 0.14 140 / 0.03));
+}
+
+[data-theme="dark"] .bg-gradient-card-green {
+  background: linear-gradient(135deg, oklch(0.38 0.14 155 / 0.15), oklch(0.42 0.1 140 / 0.06));
 }
 
 .bg-gradient-card-orange {
   background: linear-gradient(135deg, oklch(0.7 0.16 60 / 0.08), oklch(0.75 0.12 45 / 0.03));
 }
 
+[data-theme="dark"] .bg-gradient-card-orange {
+  background: linear-gradient(135deg, oklch(0.42 0.12 60 / 0.15), oklch(0.45 0.08 45 / 0.06));
+}
+
 .bg-gradient-card-purple {
   background: linear-gradient(135deg, oklch(0.55 0.2 290 / 0.08), oklch(0.65 0.16 310 / 0.03));
 }
 
+[data-theme="dark"] .bg-gradient-card-purple {
+  background: linear-gradient(135deg, oklch(0.35 0.14 290 / 0.15), oklch(0.4 0.1 310 / 0.06));
+}
+
 .text-gradient {
   background: linear-gradient(135deg, var(--color-gradient-start), var(--color-gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="dark"] .text-gradient {
+  background: linear-gradient(135deg, oklch(0.65 0.2 265), oklch(0.7 0.16 330));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -137,6 +160,11 @@
   font-weight: 600;
 }
 
+[data-theme="dark"] .sidebar-item-active {
+  background: linear-gradient(90deg, oklch(0.55 0.24 265 / 0.18), oklch(0.55 0.24 265 / 0.04)) !important;
+  border-left: 3px solid oklch(0.65 0.2 265);
+}
+
 /* ==========================================
    Background Pattern
    ========================================== */
@@ -188,6 +216,10 @@
   margin: 0 auto 0.75rem;
 }
 
+[data-theme="dark"] .empty-state-icon {
+  background: linear-gradient(135deg, oklch(0.35 0.14 265 / 0.2), oklch(0.4 0.1 330 / 0.1));
+}
+
 /* ==========================================
    Input Focus Enhancement
    ========================================== */
@@ -197,6 +229,13 @@
 .textarea:focus {
   border-color: oklch(0.55 0.24 265) !important;
   box-shadow: 0 0 0 3px oklch(0.55 0.24 265 / 0.1) !important;
+}
+
+[data-theme="dark"] .input:focus,
+[data-theme="dark"] .select:focus,
+[data-theme="dark"] .textarea:focus {
+  border-color: oklch(0.65 0.2 265) !important;
+  box-shadow: 0 0 0 3px oklch(0.55 0.24 265 / 0.15) !important;
 }
 
 /* ==========================================
@@ -221,6 +260,14 @@
   background: oklch(0.6 0.04 265 / 0.5);
 }
 
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: oklch(0.4 0.02 265 / 0.4);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.5 0.04 265 / 0.6);
+}
+
 /* ==========================================
    Section Divider
    ========================================== */
@@ -229,6 +276,10 @@
   height: 1px;
   background: linear-gradient(90deg, transparent, oklch(0.55 0.24 265 / 0.15), transparent);
   margin: 0.25rem 0;
+}
+
+[data-theme="dark"] .section-divider {
+  background: linear-gradient(90deg, transparent, oklch(0.55 0.24 265 / 0.25), transparent);
 }
 
 /* ==========================================
