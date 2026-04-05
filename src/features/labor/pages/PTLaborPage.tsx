@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Save, UserPlus, Users } from 'lucide-react'
-import { useAuth } from '../../../hooks/useAuth'
 import { useBranch } from '../../../hooks/useBranch'
 import { useEmployees } from '../hooks/useEmployees'
 import { useLabor } from '../hooks/useLabor'
@@ -11,7 +10,6 @@ import { formatMonthYear, toBuddhistYear } from '../../../lib/date-utils'
 import { THAI_MONTHS } from '../../../lib/constants'
 
 export default function PTLaborPage() {
-  const { profile } = useAuth()
   const now = new Date()
   const [month, setMonth] = useState(now.getMonth() + 1)
   const [year, setYear] = useState(now.getFullYear())

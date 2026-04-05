@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { ShoppingCart, Save, Settings } from 'lucide-react'
-import { useAuth } from '../../../hooks/useAuth'
 import { useBranch } from '../../../hooks/useBranch'
 import { useInventory } from '../hooks/useInventory'
 import { supabase } from '../../../lib/supabase'
@@ -24,7 +23,6 @@ interface SalesTarget {
 }
 
 export default function ParStockPage() {
-  const { profile } = useAuth()
   const { activeBranch } = useBranch()
   const branchId = activeBranch?.id ?? null
 

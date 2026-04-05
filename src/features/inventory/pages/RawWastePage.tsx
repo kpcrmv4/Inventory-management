@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { Trash, Plus, Trash2, Calendar } from 'lucide-react'
-import { useAuth } from '../../../hooks/useAuth'
 import { useBranch } from '../../../hooks/useBranch'
 import { supabase } from '../../../lib/supabase'
 import { showSuccess, showError, showWarning } from '../../../lib/toast'
@@ -33,7 +32,6 @@ const WASTE_TYPE_LABEL: Record<WasteType, string> = {
 const CURRENT_CE_YEAR = new Date().getFullYear()
 
 export default function RawWastePage() {
-  const { profile } = useAuth()
   const { activeBranch } = useBranch()
   const branchId = activeBranch?.id ?? null
 

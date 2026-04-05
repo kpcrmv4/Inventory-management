@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../../../lib/supabase'
-import { useAuth } from '../../../hooks/useAuth'
 import { showSuccess, showError } from '../../../lib/toast'
 
 interface ExpenseRecord {
@@ -18,7 +17,6 @@ interface DepreciationRecord {
 }
 
 export function useExpenses(branchId: string | null, month: number, year: number) {
-  const { profile } = useAuth()
   const [fixedExpenses, setFixedExpenses] = useState<ExpenseRecord[]>([])
   const [variableExpenses, setVariableExpenses] = useState<ExpenseRecord[]>([])
   const [depreciation, setDepreciation] = useState<DepreciationRecord>({

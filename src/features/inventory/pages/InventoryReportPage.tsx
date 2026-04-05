@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react'
 import { BarChart3 } from 'lucide-react'
-import { useAuth } from '../../../hooks/useAuth'
 import { useBranch } from '../../../hooks/useBranch'
 import { useInventory } from '../hooks/useInventory'
 import type { InventoryRow } from '../hooks/useInventory'
@@ -52,7 +51,6 @@ function formatValueForTab(value: number, tab: TabKey): string {
 }
 
 export default function InventoryReportPage() {
-  const { profile } = useAuth()
   const { activeBranch } = useBranch()
   const branchId = activeBranch?.id ?? null
 
