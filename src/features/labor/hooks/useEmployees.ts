@@ -29,7 +29,7 @@ export function useEmployees(branchId: string | null, type: EmployeeType) {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [loading, setLoading] = useState(true)
 
-  const effectiveBranchId = branchId || profile?.branch_id
+  const effectiveBranchId = branchId
 
   const fetchEmployees = useCallback(async () => {
     if (!effectiveBranchId) return

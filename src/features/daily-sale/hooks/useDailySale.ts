@@ -35,7 +35,7 @@ export function useDailySale(branchId: string | null, date: string) {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
-  const effectiveBranchId = branchId || profile?.branch_id
+  const effectiveBranchId = branchId
 
   const fetchChannels = useCallback(async () => {
     if (!profile?.tenant_id) {

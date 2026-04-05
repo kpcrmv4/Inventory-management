@@ -9,7 +9,7 @@ import {
   Flame,
   Settings,
 } from 'lucide-react'
-import { useAuth } from '../../../hooks/useAuth'
+import { useBranch } from '../../../hooks/useBranch'
 import { useExpenses } from '../hooks/useExpenses'
 import { calculateDepreciation } from '../utils/expense-calculations'
 import { formatBaht, formatNumber } from '../../../lib/currency'
@@ -45,11 +45,11 @@ interface VariableExpenseRow {
 }
 
 export default function ExpensesPage() {
-  const { profile } = useAuth()
   const now = new Date()
   const [month, setMonth] = useState(now.getMonth() + 1)
   const [year, setYear] = useState(now.getFullYear())
-  const branchId = profile?.branch_id || null
+  const { activeBranch } = useBranch()
+  const branchId = activeBranch?.id ?? null
 
   const {
     fixedExpenses,
