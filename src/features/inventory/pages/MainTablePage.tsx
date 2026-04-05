@@ -194,10 +194,12 @@ export default function MainTablePage() {
       </div>
 
       {/* Monthly header */}
-      <div className="card bg-base-100 card-enhanced bg-gradient-brand-subtle">
-        <div className="card-body p-5">
-          <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <Save size={16} className="text-primary" />
+      <div className="form-section">
+        <div className="p-0">
+          <h3 className="font-bold text-base mb-4 flex items-center gap-2">
+            <div className="icon-circle-sm bg-primary/10">
+              <Save size={14} className="text-primary" />
+            </div>
             ข้อมูลรายเดือน
           </h3>
           <div className="space-y-4">

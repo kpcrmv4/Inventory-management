@@ -212,74 +212,72 @@ export default function RawWastePage() {
       </div>
 
       {/* Add form */}
-      <div className="card bg-base-100 card-enhanced bg-gradient-brand-subtle mb-5">
-        <div className="card-body p-5">
-          <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <Plus size={18} className="text-primary" />
-            เพิ่มรายการของเสีย
-          </h3>
-          <div className="space-y-3">
+      <div className="form-section mb-5">
+        <h3 className="font-bold text-base flex items-center gap-2 mb-4">
+          <div className="icon-circle-sm bg-primary/10">
+            <Plus size={16} className="text-primary" />
+          </div>
+          เพิ่มรายการของเสีย
+        </h3>
+        <div className="space-y-3">
+          <div className="form-control">
+            <label className="label py-1">
+              <span className="label-text text-xs font-semibold text-base-content/60">รายการ</span>
+            </label>
+            <select
+              className="select select-bordered select-sm w-full"
+              value={selectedItem}
+              onChange={(e) => setSelectedItem(e.target.value)}
+            >
+              <option value="">-- เลือกรายการ --</option>
+              {inventoryOptions.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name} ({item.unit})
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
             <div className="form-control">
-              <label className="label py-0">
-                <span className="label-text text-xs font-medium">รายการ</span>
+              <label className="label py-1">
+                <span className="label-text text-xs font-semibold text-base-content/60">จำนวน</span>
+              </label>
+              <input
+                type="number"
+                className="input input-bordered input-sm w-full"
+                placeholder="0"
+                value={qty}
+                onChange={(e) => setQty(e.target.value)}
+                min={0}
+                step="any"
+              />
+            </div>
+            <div className="form-control">
+              <label className="label py-1">
+                <span className="label-text text-xs font-semibold text-base-content/60">ประเภท</span>
               </label>
               <select
                 className="select select-bordered select-sm w-full"
-                value={selectedItem}
-                onChange={(e) => setSelectedItem(e.target.value)}
+                value={wasteType}
+                onChange={(e) => setWasteType(e.target.value as WasteType)}
               >
-                <option value="">-- เลือกรายการ --</option>
-                {inventoryOptions.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name} ({item.unit})
-                  </option>
-                ))}
+                <option value="trimmed">ตัดแต่งแล้ว</option>
+                <option value="untrimmed">ยังไม่ตัดแต่ง</option>
               </select>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="form-control">
-                <label className="label py-0">
-                  <span className="label-text text-xs font-medium">จำนวน</span>
-                </label>
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-full"
-                  placeholder="0"
-                  value={qty}
-                  onChange={(e) => setQty(e.target.value)}
-                  min={0}
-                  step="any"
-                />
-              </div>
-              <div className="form-control">
-                <label className="label py-0">
-                  <span className="label-text text-xs font-medium">ประเภท</span>
-                </label>
-                <select
-                  className="select select-bordered select-sm w-full"
-                  value={wasteType}
-                  onChange={(e) => setWasteType(e.target.value as WasteType)}
-                >
-                  <option value="trimmed">ตัดแต่งแล้ว</option>
-                  <option value="untrimmed">ยังไม่ตัดแต่ง</option>
-                </select>
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <button
-                className="btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
-                onClick={handleAdd}
-                disabled={submitting}
-              >
-                {submitting ? (
-                  <span className="loading loading-spinner loading-xs" />
-                ) : (
-                  <Plus className="w-4 h-4" />
-                )}
-                เพิ่ม
-              </button>
-            </div>
           </div>
+          <button
+            className="btn btn-primary btn-sm w-full gap-1"
+            onClick={handleAdd}
+            disabled={submitting}
+          >
+            {submitting ? (
+              <span className="loading loading-spinner loading-xs" />
+            ) : (
+              <Plus className="w-4 h-4" />
+            )}
+            เพิ่มรายการ
+          </button>
         </div>
       </div>
 

@@ -212,75 +212,73 @@ export default function ReceivingPage() {
       </div>
 
       {/* Add form */}
-      <div className="card bg-base-100 card-enhanced bg-gradient-brand-subtle">
-        <div className="card-body p-5">
-          <h3 className="font-semibold text-base flex items-center gap-2 mb-4">
-            <Plus size={18} className="text-primary" />
-            เพิ่มรายการรับเข้า
-          </h3>
-          <div className="space-y-3">
+      <div className="form-section">
+        <h3 className="font-bold text-base flex items-center gap-2 mb-4">
+          <div className="icon-circle-sm bg-primary/10">
+            <Plus size={16} className="text-primary" />
+          </div>
+          เพิ่มรายการรับเข้า
+        </h3>
+        <div className="space-y-3">
+          <div className="form-control">
+            <label className="label py-1">
+              <span className="label-text text-xs font-semibold text-base-content/60">รายการ</span>
+            </label>
+            <select
+              className="select select-bordered select-sm w-full"
+              value={selectedItem}
+              onChange={(e) => setSelectedItem(e.target.value)}
+            >
+              <option value="">-- เลือกรายการ --</option>
+              {items.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name} ({item.unit})
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
             <div className="form-control">
-              <label className="label py-0">
-                <span className="label-text text-xs font-medium">รายการ</span>
+              <label className="label py-1">
+                <span className="label-text text-xs font-semibold text-base-content/60">จำนวน</span>
               </label>
-              <select
-                className="select select-bordered select-sm w-full"
-                value={selectedItem}
-                onChange={(e) => setSelectedItem(e.target.value)}
-              >
-                <option value="">-- เลือกรายการ --</option>
-                {items.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name} ({item.unit})
-                  </option>
-                ))}
-              </select>
+              <input
+                type="number"
+                className="input input-bordered input-sm w-full"
+                placeholder="0"
+                value={qty}
+                onChange={(e) => setQty(e.target.value)}
+                min={0}
+                step="any"
+              />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="form-control">
-                <label className="label py-0">
-                  <span className="label-text text-xs font-medium">จำนวน</span>
-                </label>
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-full"
-                  placeholder="0"
-                  value={qty}
-                  onChange={(e) => setQty(e.target.value)}
-                  min={0}
-                  step="any"
-                />
-              </div>
-              <div className="form-control">
-                <label className="label py-0">
-                  <span className="label-text text-xs font-medium">จำนวนเงิน (บาท)</span>
-                </label>
-                <input
-                  type="number"
-                  className="input input-bordered input-sm w-full"
-                  placeholder="0"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  min={0}
-                  step="any"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end">
-              <button
-                className="btn btn-primary btn-sm gap-1 shadow-md shadow-primary/20"
-                onClick={handleAdd}
-                disabled={submitting}
-              >
-                {submitting ? (
-                  <span className="loading loading-spinner loading-xs" />
-                ) : (
-                  <Plus className="w-4 h-4" />
-                )}
-                เพิ่ม
-              </button>
+            <div className="form-control">
+              <label className="label py-1">
+                <span className="label-text text-xs font-semibold text-base-content/60">จำนวนเงิน (บาท)</span>
+              </label>
+              <input
+                type="number"
+                className="input input-bordered input-sm w-full"
+                placeholder="0"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                min={0}
+                step="any"
+              />
             </div>
           </div>
+          <button
+            className="btn btn-primary btn-sm w-full gap-1"
+            onClick={handleAdd}
+            disabled={submitting}
+          >
+            {submitting ? (
+              <span className="loading loading-spinner loading-xs" />
+            ) : (
+              <Plus className="w-4 h-4" />
+            )}
+            เพิ่มรายการ
+          </button>
         </div>
       </div>
 
