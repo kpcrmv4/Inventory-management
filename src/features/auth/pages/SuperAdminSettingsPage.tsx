@@ -81,9 +81,15 @@ export default function SuperAdminSettingsPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-xl sm:text-2xl font-bold text-base-content">
-        ตั้งค่าระบบ
-      </h1>
+      <div className="flex items-center gap-4">
+        <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+          <Shield size={22} />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">ตั้งค่าระบบ</h1>
+          <p className="text-sm text-base-content/50">จัดการบัญชีและความปลอดภัย</p>
+        </div>
+      </div>
 
       {/* Account info */}
       <div className="rounded-2xl border border-base-300 bg-base-100 p-4 sm:p-6 shadow-sm">

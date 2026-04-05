@@ -110,8 +110,8 @@ export default function FTLaborPage() {
           </div>
         </div>
       ) : (
-        <div className="space-y-2">
-          <h2 className="text-lg font-semibold">รายละเอียดพนักงาน ({employees.length} คน)</h2>
+        <div className="space-y-3">
+          <h2 className="text-lg font-bold">รายละเอียดพนักงาน ({employees.length} คน)</h2>
           {employees.map((emp) => (
             <LaborForm
               key={emp.id}
