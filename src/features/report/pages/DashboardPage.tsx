@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   TrendingUp, TrendingDown,
-  Package, Receipt, Users, FileText, MessageSquare,
+  Package, Receipt, Users, FileText,
   ArrowRight, Wallet, BookOpen,
 } from 'lucide-react'
 import { supabase } from '../../../lib/supabase'
