@@ -30,33 +30,59 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  /* Softer, rounder inputs globally */
-  .input, .select, .textarea {
-    border-radius: 0.75rem !important;
-    border-color: oklch(0.88 0.01 250) !important;
-    background-color: oklch(0.98 0.003 250) !important;
-  }
+}
 
-  [data-theme="dark"] .input,
-  [data-theme="dark"] .select,
-  [data-theme="dark"] .textarea {
-    border-color: oklch(0.35 0.02 250) !important;
-    background-color: oklch(0.22 0.01 250) !important;
-  }
+/* ==========================================
+   Rounded Override (outside @layer for higher specificity)
+   ========================================== */
 
-  /* Softer buttons */
-  .btn {
-    border-radius: 0.75rem;
-  }
+.input,
+.input[type="text"],
+.input[type="number"],
+.input[type="email"],
+.input[type="password"],
+.input[type="date"],
+.input[type="search"],
+.select,
+.textarea {
+  border-radius: 0.875rem !important;
+  border-color: oklch(0.88 0.01 250) !important;
+  background-color: oklch(0.975 0.003 250) !important;
+}
 
-  .btn-primary {
-    box-shadow: 0 2px 8px oklch(0.55 0.24 265 / 0.25);
-  }
+.input-sm, .select-sm {
+  border-radius: 0.75rem !important;
+}
 
-  /* Rounder cards */
-  .card {
-    border-radius: 1rem !important;
-  }
+[data-theme="dark"] .input,
+[data-theme="dark"] .select,
+[data-theme="dark"] .textarea {
+  border-color: oklch(0.35 0.02 250) !important;
+  background-color: oklch(0.22 0.01 250) !important;
+}
+
+.btn {
+  border-radius: 0.75rem !important;
+}
+
+.btn-sm {
+  border-radius: 0.625rem !important;
+}
+
+.btn-circle {
+  border-radius: 9999px !important;
+}
+
+.btn-primary {
+  box-shadow: 0 2px 8px oklch(0.55 0.24 265 / 0.25);
+}
+
+.card {
+  border-radius: 1rem !important;
+}
+
+.badge {
+  border-radius: 0.5rem !important;
 }
 
 /* ==========================================
