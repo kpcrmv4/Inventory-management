@@ -34,31 +34,51 @@ export function BottomNav({ onMoreClick }: BottomNavProps) {
   )
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 lg:hidden z-30 border-t border-base-300 bg-base-100 safe-area-bottom">
-      <div className="flex items-center justify-around h-14">
+    <div className="fixed bottom-0 left-0 right-0 lg:hidden z-30 border-t border-base-200/80 bg-base-100/85 glass-effect safe-area-bottom">
+      <div className="flex items-center justify-around h-16">
         {items.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             className={({ isActive }) =>
-              `flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors ${
-                isActive ? 'text-primary' : 'text-base-content/50 active:text-base-content/80'
+              `bottom-nav-item flex flex-col items-center justify-center gap-1 flex-1 h-full transition-all duration-200 ${
+                isActive
+                  ? 'active text-primary'
+                  : 'text-base-content/40 active:text-base-content/70'
               }`
             }
           >
-            <item.icon size={20} />
-            <span className="text-[10px] leading-tight font-medium">{item.label}</span>
+            {({ isActive }) => (
+              <>
+                <div className={`p-1.5 rounded-xl transition-all duration-200 ${
+                  isActive ? 'bg-primary/10' : ''
+                }`}>
+                  <item.icon size={20} strokeWidth={isActive ? 2.5 : 1.8} />
+                </div>
+                <span className={`text-[10px] leading-tight ${isActive ? 'font-semibold' : 'font-medium'}`}>
+                  {item.label}
+                </span>
+              </>
+            )}
           </NavLink>
         ))}
         {!isSuperAdmin && (
           <button
-            className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors ${
-              isMoreActive ? 'text-primary' : 'text-base-content/50 active:text-base-content/80'
+            className={`bottom-nav-item flex flex-col items-center justify-center gap-1 flex-1 h-full transition-all duration-200 ${
+              isMoreActive
+                ? 'active text-primary'
+                : 'text-base-content/40 active:text-base-content/70'
             }`}
             onClick={onMoreClick}
           >
-            <MoreHorizontal size={20} />
-            <span className="text-[10px] leading-tight font-medium">เพิ่มเติม</span>
+            <div className={`p-1.5 rounded-xl transition-all duration-200 ${
+              isMoreActive ? 'bg-primary/10' : ''
+            }`}>
+              <MoreHorizontal size={20} strokeWidth={isMoreActive ? 2.5 : 1.8} />
+            </div>
+            <span className={`text-[10px] leading-tight ${isMoreActive ? 'font-semibold' : 'font-medium'}`}>
+              เพิ่มเติม
+            </span>
           </button>
         )}
       </div>

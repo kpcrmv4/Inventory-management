@@ -150,10 +150,15 @@ export default function ParStockPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold flex items-center gap-2 mb-6">
-        <ShoppingCart className="w-6 h-6" />
-        Par Stock (ประมาณการสั่งซื้อ)
-      </h1>
+      <div className="flex items-center gap-4 mb-6">
+        <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+          <ShoppingCart size={22} />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">Par Stock</h1>
+          <p className="text-sm text-base-content/50">ประมาณการสั่งซื้อวัตถุดิบ</p>
+        </div>
+      </div>
 
       {/* Controls */}
       <div className="flex flex-wrap gap-3 mb-4">
@@ -285,7 +290,7 @@ export default function ParStockPage() {
           ยังไม่มีข้อมูล Inventory สำหรับเดือนนี้
         </div>
       ) : (
-        <div className="card bg-base-100 shadow">
+        <div className="card bg-base-100 card-enhanced">
           <div className="overflow-x-auto">
             <table className="table table-xs table-zebra w-full">
               <thead>

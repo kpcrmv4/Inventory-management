@@ -42,15 +42,17 @@ export default function RecipesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <BookOpen className="text-primary" size={28} />
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <BookOpen size={22} />
+          </div>
           <div>
             <h1 className="text-2xl font-bold">สูตรอาหาร</h1>
-            <p className="text-sm text-base-content/60">{recipes.length} เมนู</p>
+            <p className="text-sm text-base-content/50">{recipes.length} เมนู</p>
           </div>
         </div>
 
         {isOwner && (
-          <button className="btn btn-primary btn-sm gap-2" onClick={() => setShowModal(true)}>
+          <button className="btn btn-primary btn-sm gap-2 shadow-md shadow-primary/20" onClick={() => setShowModal(true)}>
             <Plus size={16} /> เพิ่มเมนู
           </button>
         )}

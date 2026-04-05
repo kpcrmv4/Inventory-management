@@ -183,29 +183,38 @@ export default function RawWastePage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold flex items-center gap-2 mb-6">
-        <Trash className="w-6 h-6" />
-        บันทึกของเสีย (Raw Waste)
-      </h1>
+      <div className="flex items-center gap-4 mb-6">
+        <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+          <Trash size={22} />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">บันทึกของเสีย (Raw Waste)</h1>
+          <p className="text-sm text-base-content/50">บันทึกวัตถุดิบเสียหายรายวัน</p>
+        </div>
+      </div>
 
       {/* Date picker */}
-      <div className="flex items-center gap-2 mb-4">
-        <Calendar className="w-4 h-4 text-base-content/60" />
-        <input
-          type="date"
-          className="input input-bordered input-sm"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-        <span className="text-sm text-base-content/60">
-          {formatThaiDate(date)}
-        </span>
+      <div className="card bg-base-100 card-enhanced mb-5">
+        <div className="card-body p-4 flex flex-row items-center gap-3">
+          <div className="icon-box-sm bg-primary/10 text-primary rounded-lg">
+            <Calendar size={16} />
+          </div>
+          <input
+            type="date"
+            className="input input-bordered input-sm flex-1 max-w-xs"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+          <span className="text-sm text-base-content/50 font-medium">
+            {formatThaiDate(date)}
+          </span>
+        </div>
       </div>
 
       {/* Add form */}
-      <div className="card bg-base-100 shadow mb-6">
-        <div className="card-body p-4">
-          <h3 className="font-semibold mb-3">เพิ่มรายการของเสีย</h3>
+      <div className="card bg-base-100 card-enhanced bg-gradient-brand-subtle mb-5">
+        <div className="card-body p-5">
+          <h3 className="font-semibold mb-3 flex items-center gap-2"><Plus size={18} className="text-primary" />เพิ่มรายการของเสีย</h3>
           <div className="flex flex-col sm:flex-row gap-3 items-end">
             <div className="form-control flex-1">
               <label className="label py-0">
@@ -326,7 +335,7 @@ export default function RawWastePage() {
 
           {/* Waste summary */}
           {wasteSummary.length > 0 && (
-            <div className="card bg-base-100 shadow">
+            <div className="card bg-base-100 card-enhanced">
               <div className="card-body p-4">
                 <h3 className="font-semibold mb-3">
                   สรุปของเสียรายรายการ (วันที่เลือก)

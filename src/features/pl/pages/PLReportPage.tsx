@@ -154,11 +154,13 @@ export default function PLReportPage() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <FileText className="text-primary" size={28} />
+        <div className="flex items-center gap-4">
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <FileText size={22} />
+          </div>
           <div>
             <h1 className="text-2xl font-bold">งบกำไร-ขาดทุน (P&L)</h1>
-            <p className="text-sm text-base-content/60">
+            <p className="text-sm text-base-content/50">
               {activeBranch?.name ?? 'ไม่ได้เลือกสาขา'}
             </p>
           </div>

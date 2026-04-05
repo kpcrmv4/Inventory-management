@@ -187,7 +187,15 @@ export default function RecipeDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">ภาพรวมต้นทุนเมนู</h1>
+      <div className="flex items-center gap-4">
+        <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+          <Calculator size={22} />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">ภาพรวมต้นทุนเมนู</h1>
+          <p className="text-sm text-base-content/50">วิเคราะห์ต้นทุนและกำไรต่อเมนู</p>
+        </div>
+      </div>
 
       {/* Summary Stats */}
       {stats && (

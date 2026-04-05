@@ -38,12 +38,14 @@ export default function FTLaborPage() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">
-            <Users className="w-6 h-6 inline mr-2" />
-            พนักงาน Full-Time
-          </h1>
-          <p className="text-base-content/60 mt-1">{formatMonthYear(month, year)}</p>
+        <div className="flex items-center gap-4">
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <Users size={22} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">พนักงาน Full-Time</h1>
+            <p className="text-base-content/50 text-sm mt-0.5">{formatMonthYear(month, year)}</p>
+          </div>
         </div>
         <div className="flex flex-wrap gap-2">
           <select
@@ -85,7 +87,7 @@ export default function FTLaborPage() {
 
       {/* Summary Table */}
       {employees.length > 0 && (
-        <div className="card bg-base-100 shadow-sm">
+        <div className="card bg-base-100 card-enhanced">
           <div className="card-body">
             <h2 className="card-title text-lg">สรุปเงินเดือน Full-Time</h2>
             <LaborSummaryTable employees={employees} getRecord={getRecord} />
@@ -95,7 +97,7 @@ export default function FTLaborPage() {
 
       {/* Employee Forms */}
       {employees.length === 0 ? (
-        <div className="card bg-base-100 shadow-sm">
+        <div className="card bg-base-100 card-enhanced">
           <div className="card-body text-center py-12">
             <Users className="w-12 h-12 mx-auto text-base-content/30" />
             <p className="text-base-content/60 mt-4">

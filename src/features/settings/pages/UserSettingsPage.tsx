@@ -155,8 +155,10 @@ export default function UserSettingsPage() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Users className="text-primary" size={28} />
+        <div className="flex items-center gap-4">
+          <div className="icon-box bg-gradient-brand text-white shadow-lg shadow-primary/20">
+            <Users size={22} />
+          </div>
           <div>
             <h1 className="text-2xl font-bold">จัดการผู้ใช้</h1>
             <p className="text-sm text-base-content/60">
@@ -176,7 +178,7 @@ export default function UserSettingsPage() {
 
       {/* Invite Form */}
       {showForm && (
-        <div className="card bg-base-100 shadow-sm border border-base-300">
+        <div className="card bg-base-100 card-enhanced">
           <div className="card-body">
             <h3 className="card-title text-base">เพิ่มพนักงานใหม่</h3>
             <form onSubmit={handleInviteStaff} className="space-y-4">
