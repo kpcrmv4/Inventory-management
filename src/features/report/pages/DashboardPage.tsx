@@ -133,51 +133,47 @@ export default function DashboardPage() {
 
       {!loading && kpi && (
         <>
-          {/* KPI Cards - pastel colored like reference apps */}
+          {/* KPI Cards - 2 columns */}
           <div className="grid grid-cols-2 gap-3">
-            {/* Today Sales */}
-            <div className="card kpi-card-green p-4">
+            <div className="rounded-2xl kpi-card-green p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-base-content/60 font-medium">ยอดขายวันนี้</span>
                 <div className="icon-circle-sm bg-emerald-200/60">
                   <TrendingUp size={16} className="text-emerald-600" />
                 </div>
               </div>
-              <p className="text-2xl font-extrabold tracking-tight">{formatBaht(kpi.todaySales)}</p>
+              <p className="text-xl font-extrabold tracking-tight">{formatBaht(kpi.todaySales)}</p>
             </div>
 
-            {/* Month Sales */}
-            <div className="card kpi-card-blue p-4">
+            <div className="rounded-2xl kpi-card-blue p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-base-content/60 font-medium">ยอดขายเดือนนี้</span>
                 <div className="icon-circle-sm bg-blue-200/60">
                   <TrendingUp size={16} className="text-blue-600" />
                 </div>
               </div>
-              <p className="text-2xl font-extrabold tracking-tight">{formatBaht(kpi.monthSales)}</p>
+              <p className="text-xl font-extrabold tracking-tight">{formatBaht(kpi.monthSales)}</p>
             </div>
 
-            {/* COGS % */}
-            <div className="card kpi-card-orange p-4">
+            <div className="rounded-2xl kpi-card-orange p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-base-content/60 font-medium">COGS %</span>
                 <div className="icon-circle-sm bg-amber-200/60">
                   <TrendingDown size={16} className="text-amber-600" />
                 </div>
               </div>
-              <p className="text-2xl font-extrabold tracking-tight">{formatPercent(kpi.cogsPercent)}</p>
+              <p className="text-xl font-extrabold tracking-tight">{formatPercent(kpi.cogsPercent)}</p>
               <p className="text-xs text-base-content/40 mt-1">GP {formatPercent(kpi.gpPercent)}</p>
             </div>
 
-            {/* Employee Count */}
-            <div className="card kpi-card-purple p-4">
+            <div className="rounded-2xl kpi-card-purple p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-base-content/60 font-medium">พนักงาน</span>
                 <div className="icon-circle-sm bg-purple-200/60">
                   <Users size={16} className="text-purple-600" />
                 </div>
               </div>
-              <p className="text-2xl font-extrabold tracking-tight">{formatNumber(kpi.employeeCount, 0)} <span className="text-sm font-medium text-base-content/50">คน</span></p>
+              <p className="text-xl font-extrabold tracking-tight">{formatNumber(kpi.employeeCount, 0)} <span className="text-sm font-medium text-base-content/50">คน</span></p>
             </div>
           </div>
 
